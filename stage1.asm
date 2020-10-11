@@ -11,7 +11,7 @@
 jmp word 0x0000:stage1          ;just go to stage1 label
 
 stage1:
-    mov ax, 0xb800              ;so we can mov const to es directly
+    mov ax, 0x1000              ;so we can mov const to es directly
     mov es, ax                  
     mov bx, 0                   ;bx is offset in address [es:bx] (0x1000*0x10+0x0)
                                 ;its just stage2 address in memory
