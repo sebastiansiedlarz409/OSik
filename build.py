@@ -1,14 +1,15 @@
 import os
+import subprocess
 
 sources = ["stage1.asm", "stage2.asm"]
 
 #build stage1
 build_stage_1 = f"nasm {sources[0]} -o {sources[0].split('.')[0]}"
-os.system(build_stage_1)
+subprocess.call(build_stage_1)
 
 #build stage2
 build_stage_2 = f"nasm {sources[1]} -o {sources[1].split('.')[0]}"
-os.system(build_stage_2)
+subprocess.call(build_stage_2)
 
 image = []
 
@@ -21,4 +22,4 @@ with open("floppy.bin", "wb") as f:
     for b in image:
         f.write(b)
 
-#os.system("bochs -f bochs\osdev.bochsrc")
+subprocess.call("bochs -f bochs\osdev.bochsrc")

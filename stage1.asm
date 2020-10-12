@@ -20,7 +20,7 @@ stage1:
     mov al, 1                   ;sector count 1 sector = 512 bytes, how many sectors
     mov ch, 0                   ;cylinder number -> floppy = 0
     mov dh, 0                   ;head = 0
-    mov cl, 2                   ;so 1 is boot, we start from 2, bits 7-6 = 00
+    mov cl, 2                   ;so 1 is stage1, we start from 2 stage2, bits 7-6 = 00
     mov dl, 0                   ;index of floppy file
                                 ;check page 6 -> http://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_and_DOS_interrupts.pdf
 
