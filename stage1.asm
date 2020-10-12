@@ -17,6 +17,12 @@ stage1:
                                 ;its just stage2 address in memory
 
     mov ah, 0x02                ;interrupt command
+
+    db 0x53                     ;check build.py
+    db 0x65
+    db 0x42
+    db 0x61
+
     mov al, 1                   ;sector count 1 sector = 512 bytes, how many sectors
     mov ch, 0                   ;cylinder number -> floppy = 0
     mov dh, 0                   ;head = 0

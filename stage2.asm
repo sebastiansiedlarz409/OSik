@@ -16,3 +16,5 @@ stage2:
                                         ;check "Segment Registers" -> https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture
 
     jmp $                               ;infinity loop
+
+    times 1024 db 0x00
