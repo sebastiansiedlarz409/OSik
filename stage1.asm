@@ -11,8 +11,8 @@
 jmp word 0x0000:stage1          ;just go to stage1 label
 
 stage1:
-    mov ax, 0x1000              ;so we can mov const to es directly
-    mov es, ax                  
+    mov ax, 0x1000              ;we can not mov const to segment register directly
+    mov es, ax                  ;so we mov register to segment register
     mov bx, 0                   ;bx is offset in address [es:bx] (0x1000*0x10+0x0)
                                 ;its just stage2 address in memory
 
@@ -30,7 +30,8 @@ stage1:
     mov dl, 0                   ;index of floppy file
                                 ;check page 6 -> http://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_and_DOS_interrupts.pdf
 
-    int 13h                    ;interrutp from link above
+    int 13h                     ;interrupt from link above
+                                ;move to stage2
 
 epilogue:
 %if ($ - $$) > 510
