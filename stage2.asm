@@ -9,7 +9,7 @@ start:
 
     mov ax, 0x0f00                      
     mov ss, ax                          ;set stack segment address
-    mov sp, 0                           ;0 to stack pointer
+    mov sp, 0                           ;0 to stack pointer register
 
     lgdt [GDT_ADR]                      ;loads GDT to GDTR GDT register
                                         ;intel manual 2A -> page 663
@@ -34,9 +34,16 @@ stage32:
     mov es, ax
     mov ss, ax
 
-    lea eax, [0xb8000]                  ;lea toggele big/little endian
-  
-    mov dword [eax], 0x41414141
+    ;here we display sign, we will know that execution arrives here
+    lea eax, [0xb8000]                  ;lea toggele big/little endian, 0xb8000 is address in video ram
+    mov word [eax+160*18], 0x0233       ;byte for colors, byte for char
+    mov word [eax+160*18+2], 0x0232     ;https://pl.wikipedia.org/wiki/Color_Graphics_Adapter
+    mov word [eax+160*18+4], 0x0262     ;one line = 160 bytes
+    mov word [eax+160*18+6], 0x0269     ;we moved to line 18
+    mov word [eax+160*18+8], 0x0274
+    mov word [eax+160*18+10], 0x0220
+    mov word [eax+160*18+12], 0x026f
+    mov word [eax+160*18+14], 0x026b
 
     jmp $                               ;infinity loop
 
@@ -44,7 +51,8 @@ stage32:
 ;intel manuals 3
 ;segment selector (16-bit identifier for a segment) -> page 95
 
-GDT:                                    ;GLOBAL DESCRIPTOR TABLE 32-BIT
+;GLOBAL DESCRIPTOR TABLE 32-BIT
+GDT:
 
 ; Null segment
 dd 0, 0
@@ -80,4 +88,4 @@ dw (GDT_END - GDT) - 1                  ;size of GDT above as 2Bytes
 dd 0x10000 + GDT                        ;16 bit mode address GDT
 times (32 - ($ - $$) % 32) dd 0xcc
 
-times 512 - ($ - $$) db 0
+times 1024 - ($ - $$) db 0

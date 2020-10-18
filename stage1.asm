@@ -1,5 +1,5 @@
 [bits 16]                       ;we start in 16 bits mode
-[org 0x7c00]                    ;adres in memory where bios upload our image
+[org 0x7c00]                    ;adres in memory where bios upload our image is 0x0000:0x7c00
                                 ;THERE IS ONLY 512 BYTES SPACE -> https://wiki.osdev.org/Memory_Map_(x86)
                                 ;its 16bit address mode
                                 ;address = segment * 0x10 + offset
@@ -8,20 +8,21 @@
                                 ;so CS = 0x0000, IP == 0x7c00
                                 ;check "Memory Addressing" -> https://wiki.osdev.org/Real_Mode
 
-jmp word 0x0000:stage1          ;just go to stage1 label
+jmp word 0x0000:stage1          ;just jump to stage1 label
 
 stage1:
     mov ax, 0x1000              ;we can not mov const to segment register directly
     mov es, ax                  ;so we mov register to segment register
-    mov bx, 0                   ;bx is offset in address [es:bx] (0x1000*0x10+0x0)
-                                ;its just stage2 address in memory
+    mov bx, 0                   ;bx is offset in address
+                                ;[es:bx] (0x1000*0x10+0x0) is where stage2 will be loaded by int 13h
 
-    mov ah, 0x02                ;interrupt command
+    mov ah, 0x02                ;interrupt 13h command
 
-    mov al, 1                   ;sector count 1 sector = 512 bytes, how many sectors
-    mov ch, 0                   ;cylinder number -> floppy = 0
-    mov dh, 0                   ;head = 0
-    mov cl, 2                   ;so 1 is stage1, we start from 2 stage2, bits 7-6 = 00
+    mov al, 2                   ;count of sector to load from stage2, 1 sector = 512 bytes
+    mov ch, 0                   ;cylinder index, in case of floppy it is 0
+    mov dh, 0                   ;head index, in caso of floppy it is 0
+    mov cl, 2                   ;index of first stage2 sector, index start from 1, bits 7-6 = 00
+    ;mov dl, 0                  ;drive index, BIOS set it for us
                                 ;check page 6 -> http://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_and_DOS_interrupts.pdf
 
     int 13h                     ;interrupt from link above
