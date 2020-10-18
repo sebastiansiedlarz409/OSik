@@ -2,7 +2,7 @@
 [org 0x0000]                            ;I choose to load stage2 to 0x10000
                                         ;check "Real mode address space" -> https://wiki.osdev.org/Memory_Map_(x86)
 
-stage2:
+start:
     mov ax, 0x1000
     mov ds, ax                          ;set data segment address
     mov es, ax                          ;set extra segment address
@@ -11,12 +11,34 @@ stage2:
     mov ss, ax                          ;set stack segment address
     mov sp, 0                           ;0 to stack pointer
 
-    mov [fs:bx], ax                     ;set fs segment register
-                                        ;check "Segment Registers" -> https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture
+    lgdt [GDT_ADR]                      ;loads GDT to GDTR GDT register
+                                        ;intel manual 2A -> page 663
+
+    mov eax, cr0                        ;set processor flag
+    or al, 1                            ;set PE (Protection Enable) bit in CR0 (Control Register 0)
+    mov cr0, eax                        ;protected mode = 32 bits, real = 16 bits
+                                        ;CR0 — Contains system control flags that control operating mode and states of the processor
+                                        ;intel 3A -> page 76
+                                        ;https://wiki.osdev.org/Protected_Mode
+
+    ;0x8 is code segment id
+    ;intel 3A - page 95
+    ;jmp actualy switch modes
+    ;we moved to 32 bits addresses
+    jmp dword 0x8:(0x10000+stage32)
+
+stage32:
+    [bits 32]
+    mov ax, 0x10                        ;0x10 is data segment id from GDT below
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+
+    lea eax, [0xb8000]                  ;lea toggele big/little endian
+  
+    mov dword [eax], 0x41414141
 
     jmp $                               ;infinity loop
-
-    times 1024 db 0x00
 
 ;https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html
 ;intel manuals 3
@@ -39,10 +61,23 @@ dd 0xffff                               ;2Bytes base address, 2Bytes segment lim
 ;L - bit 21 - 1 64 bit segment, 0 no 64 bits segment
 ;D/B - bit 22 - 0 16 bi segment, 1 32 bits segment
 ;G - bit 23 - Granularity -  granularity flag is clear, the segment limit is interpreted in byte units; when flag is set, the segment limit is interpreted in 4-KByte units.
-dd (0b1010 << 8) | (0b1 << 12) | (0b1 << 15) | (0b1111 << 16) | (0b1 << 22) | (0b1 << 23)
+dd (10 << 8) | (1 << 12) | (1 << 15) | (15 << 16) | (1 << 22) | (1 << 23)
 
 ; Data segment
 dd 0xffff                               ;2Bytes base address, 2Bytes segment limit(size)
-dd (2 << 8) | (1 << 12) | (1 << 15) | (0xf << 16) | (1 << 22) | (1 << 23)
+dd (2 << 8) | (1 << 12) | (1 << 15) | (15 << 16) | (1 << 22) | (1 << 23)
+
+; Its helpfull when number of segment is multiply of 2
+dd 0, 0
 
 GDT_END:
+
+;this is GDT address structure for lgdt instruction
+;intel manuals 2A -> page 663
+;2Bytes limit/size, 4Bytes Address
+GDT_ADR:
+dw (GDT_END - GDT) - 1                  ;size of GDT above as 2Bytes
+dd 0x10000 + GDT                        ;16 bit mode address GDT
+times (32 - ($ - $$) % 32) dd 0xcc
+
+times 512 - ($ - $$) db 0

@@ -18,22 +18,18 @@ stage1:
 
     mov ah, 0x02                ;interrupt command
 
-    db 0x53                     ;check build.py
-    db 0x65
-    db 0x42
-    db 0x61
-
     mov al, 1                   ;sector count 1 sector = 512 bytes, how many sectors
     mov ch, 0                   ;cylinder number -> floppy = 0
     mov dh, 0                   ;head = 0
     mov cl, 2                   ;so 1 is stage1, we start from 2 stage2, bits 7-6 = 00
-    mov dl, 0                   ;index of floppy file
                                 ;check page 6 -> http://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_and_DOS_interrupts.pdf
 
     int 13h                     ;interrupt from link above
                                 ;move to stage2
 
-epilogue:
+    jmp word 0x1000:0x0000      ;we loaded stage2 so now we jump there
+
+ending:
 %if ($ - $$) > 510
   %fatal "STAGE1 code cant exceed 512 bytes!!!"
 %endif
