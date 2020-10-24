@@ -127,4 +127,79 @@ dw (GDT_END64 - GDT64) - 1                  ;size of GDT above as 2Bytes
 dd 0x10000 + GDT64                          ;16 bit mode address GDT
 times (32 - ($ - $$) % 32) dd 0xcc
 
-times 2048 - ($ - $$) db 0
+times 4096 - ($ - $$) db 0
+
+;IE-32e Paging
+;Intel 3A -> page 124
+;its a paging for long mode
+
+PML4:
+
+;this PML4 allow as to add 512 page address because we have 9 bits in virtual address for PML4
+;below we define one page
+;Intel 3A -> page 124
+
+;P - bit 0 - must be 1
+;R/W - bit 1 - 0 means only read, 1 means read and write
+;U/S - bit 2 - 0 means that only ring 0 can access this region -> https://en.wikipedia.org/wiki/Protection_ring
+;PWT - bit 3 - caching type ?
+;PWD - bit 4 - cache disable if 1
+;A - bit 5 - indicates whether this entry has been used for linear-address translation ?
+;bit 6 - ignored
+;PS - bit 7 - must be 0
+;bits[8:11] - ignored
+;bits[12:PDPTE size - 1] - pointer to PDPTE, 32 bits lenght i guess
+;bits[PDPTE size:51] - this bits must be 0
+;bits[52:62] - ignored
+;XD - bit 63 - 1 block code execution from this page, 0 allowes execution
+;intel 3A - page 129, table 4.15
+dq 1 | (1 << 1) | (PDPTE - $$ + 0x10000)        ;$$ means nasm code begin, $ end
+times 511 dq 0                                  ;we add 1 record, so we must add other 511 record * 4 bytes
+
+;Directory-Pointer
+;this PDPTE allow as to add 512 page address because we have 9 bits in virtual address for PDPTE
+;below we define one page
+;Intel 3A -> page 124
+
+PDPTE:
+
+;intel 3A - page 130, table 4.17
+dq 1 | (1 << 1) | (PDE - $$ + 0x10000)
+times 511 dq 0
+
+;Directory
+;this PDE allow as to add 512 page address because we have 9 bits in virtual address for PDE
+;below we define one page
+;Intel 3A -> page 124
+
+PDE:
+;intel 3A - page 130, table 4.19
+dq 1 | (1 << 1) | (PTE - $$ + 0x10000)
+times 511 dq 0
+
+;Table
+;this PTE allow as to add 512 page address because we have 9 bits in virtual address for PTE
+;below we define one page
+;Intel 3A -> page 124
+
+PTE:
+;P - bit 0 - must be 1
+;R/W - bit 1 - 0 means only read, 1 means read and write
+;U/S - bit 2 - 0 means that only ring 0 can access this region -> https://en.wikipedia.org/wiki/Protection_ring
+;PWT - bit 3 - caching type ?
+;PWD - bit 4 - cache disable if 1
+;A - bit 5 - indicates whether software has accessed the 1-GByte page referenced by this entry
+;D - bit 6 - indicates whether software has written to the 1-GByte page referenced by this entry
+;PS - bit 7 - page size, must be 1
+;G - bit 8 - define if translation is global
+;bits[9:11] - ignored
+;PAT - bit 12 - determines the memory type used to access the 1-GByte page referenced by this entry
+;bits[13:29] - must be 0
+;bits[30:memory address size - 1] - size of memory address I guess
+;bits[memory address size:51] - must be 0
+;bits[52:58] - ignored
+;bits[59:62] - access level, set 0 for ring 0
+;bits[63] - 1 block code execution from this page, 0 allowes execution
+;intel 3A - page 130, table 4.20
+dq 1 | (1 << 1) | (1 << 7)
+times 511 dq 0
