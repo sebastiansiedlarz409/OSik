@@ -45,7 +45,46 @@ stage32:
     mov word [eax+160*18+12], 0x026f
     mov word [eax+160*18+14], 0x026b
 
-    jmp $                               ;infinity loop
+    mov eax, (PML4 - $$) + 0x10000      ;move main paging table address to cr3
+    mov cr3, eax                        ;Intel 3A -> page 75
+
+    mov eax, cr4                        ;Intel 3A -> page 79
+    or eax, (1 << 5)                    ;CR4.PAE must be set before enter to long mode
+    mov cr4, eax
+
+    mov ecx, 0xC0000080                 ;set the long mode bit in the EFER MSR
+    rdmsr                               ;https://en.wikipedia.org/wiki/Control_register#EFER
+    or eax, (1 << 8)                    ;set 8 bit
+    wrmsr                               ;enable IE-32e operation
+                                        ;Intel 3A -> page 71
+
+    mov eax, cr0                        ;enable paging in 32 bit mode
+    or eax, (1 << 31)                   ;Intel 3A -> page 76
+    mov cr0, eax
+
+    lgdt [GDT_ADR64 + 0x10000]          ;reload GDT for 64 bits
+
+    ;0x8 is code segment id
+    ;intel 3A - page 95
+    ;jmp actualy switch modes
+    ;we moved to 32 bits addresses
+    jmp dword 0x8:(0x10000+stage64)
+
+stage64:
+    [bits 64]
+
+    ;here we display sign, we will know that execution arrives here
+    mov rax, 0xb8000
+    mov word [eax+160*19], 0x0E36
+    mov word [eax+160*19+2], 0x0E34
+    mov word [eax+160*19+4], 0x0E62
+    mov word [eax+160*19+6], 0x0E69
+    mov word [eax+160*19+8], 0x0E74
+    mov word [eax+160*19+10], 0x0E20
+    mov word [eax+160*19+12], 0x0E6f
+    mov word [eax+160*19+14], 0x0E6b 
+
+    jmp $
 
 ;https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html
 ;intel manuals 3
@@ -132,6 +171,8 @@ times 4096 - ($ - $$) db 0
 ;IE-32e Paging
 ;Intel 3A -> page 124
 ;its a paging for long mode
+;!!!MAP 2 MB!!!
+;Intel 3A -> page 126 Figure 4-9
 
 PML4:
 
@@ -153,7 +194,7 @@ PML4:
 ;bits[52:62] - ignored
 ;XD - bit 63 - 1 block code execution from this page, 0 allowes execution
 ;intel 3A - page 129, table 4.15
-dq 1 | (1 << 1) | (PDPTE - $$ + 0x10000)        ;$$ means nasm code begin, $ end
+dq 1 | (1 << 1) | (PDPTE - $$ + 0x10000)        ;$$ means nasm code begin, $ end, its just bitewise add address so lower 12 bits change
 times 511 dq 0                                  ;we add 1 record, so we must add other 511 record * 4 bytes
 
 ;Directory-Pointer
@@ -173,16 +214,6 @@ times 511 dq 0
 ;Intel 3A -> page 124
 
 PDE:
-;intel 3A - page 130, table 4.19
-dq 1 | (1 << 1) | (PTE - $$ + 0x10000)
-times 511 dq 0
-
-;Table
-;this PTE allow as to add 512 page address because we have 9 bits in virtual address for PTE
-;below we define one page
-;Intel 3A -> page 124
-
-PTE:
 ;P - bit 0 - must be 1
 ;R/W - bit 1 - 0 means only read, 1 means read and write
 ;U/S - bit 2 - 0 means that only ring 0 can access this region -> https://en.wikipedia.org/wiki/Protection_ring
@@ -200,6 +231,6 @@ PTE:
 ;bits[52:58] - ignored
 ;bits[59:62] - access level, set 0 for ring 0
 ;bits[63] - 1 block code execution from this page, 0 allowes execution
-;intel 3A - page 130, table 4.20
+;intel 3A - page 130, table 4.18
 dq 1 | (1 << 1) | (1 << 7)
 times 511 dq 0
