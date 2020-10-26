@@ -72,7 +72,7 @@ stage32:
 
 stage64:
     [bits 64]
-
+    
     ;here we display sign, we will know that execution arrives here
     mov rax, 0xb8000
     mov word [eax+160*19], 0x0E36
@@ -97,21 +97,22 @@ GDT32:
 dd 0, 0
 
 ; Code segment -> page 97
-dd 0xffff                                   ;2Bytes base address, 2Bytes segment limit(size)
-;BA - bits [7:0] - base address
+dd 0xffff                                   ;lower 16 bits from base address, lower 16 bits from segment limit
+;BA - bits [7:0] - bits[16:23] from base address
 ;Type - bits [11:8] - read/execution -> 0b1010 -> Table 3.1 page 100
 ;S - bit 12 - the segment descriptor is for a system segment (S flag is clear) or a code or data segment (S flag is set)
-;DPL - bits[13:14] - DPL (descriptor privilege level) field specifies the privilege level of the segment -> 0 to 3
+;DPL - bits[14:13] - DPL (descriptor privilege level) field specifies the privilege level of the segment -> 0 to 3
 ;P - bit 15 - indicates whether the segment is present in memory (set) or not present (clear)
-;SegLimit - bits [19:16] - segment limit is 0xffff so here goes 0xf
+;SegLimit - bits [19:16] - its bits [19:16] from 20 bits segment limit
 ;AVL - bit 20 - Available for use by system software
 ;L - bit 21 - 1 64 bit segment, 0 no 64 bits segment
 ;D/B - bit 22 - 0 16 bi segment, 1 32 bits segment
 ;G - bit 23 - Granularity -  granularity flag is clear, the segment limit is interpreted in byte units; when flag is set, the segment limit is interpreted in 4-KByte units.
+;BA - bits [31:24] - bits[24:31] from base address
 dd (10 << 8) | (1 << 12) | (1 << 15) | (15 << 16) | (1 << 22) | (1 << 23)
 
 ; Data segment
-dd 0xffff                                   ;2Bytes base address, 2Bytes segment limit(size)
+dd 0xffff
 dd (2 << 8) | (1 << 12) | (1 << 15) | (15 << 16) | (1 << 22) | (1 << 23)
 
 ; Its helpfull when number of segment is multiply of 2
@@ -136,21 +137,22 @@ GDT64:
 dd 0, 0
 
 ; Code segment -> page 97
-dd 0xffff                                   ;2Bytes base address, 2Bytes segment limit(size)
-;BA - bits [7:0] - base address
+dd 0xffff                                   ;lower 16 bits from base address, lower 16 bits from segment limit
+;BA - bits [7:0] - bits[16:23] from base address
 ;Type - bits [11:8] - read/execution -> 0b1010 -> Table 3.1 page 100
 ;S - bit 12 - the segment descriptor is for a system segment (S flag is clear) or a code or data segment (S flag is set)
-;DPL - bits[13:14] - DPL (descriptor privilege level) field specifies the privilege level of the segment -> 0 to 3
+;DPL - bits[14:13] - DPL (descriptor privilege level) field specifies the privilege level of the segment -> 0 to 3
 ;P - bit 15 - indicates whether the segment is present in memory (set) or not present (clear)
-;SegLimit - bits [19:16] - segment limit is 0xffff so here goes 0xf
+;SegLimit - bits [19:16] - its bits [19:16] from 20 bits segment limit
 ;AVL - bit 20 - Available for use by system software
 ;L - bit 21 - 1 64 bit segment, 0 no 64 bits segment
 ;D/B - bit 22 - 0 16 bit segment, 1 32 bits segment
 ;G - bit 23 - Granularity -  granularity flag is clear, the segment limit is interpreted in byte units; when flag is set, the segment limit is interpreted in 4-KByte units.
+;BA - bits [31:24] - bits[24:31] from base address
 dd (10 << 8) | (1 << 12) | (1 << 15) | (15 << 16) | (1 << 21) | (1 << 23)
 
 ; Data segment
-dd 0xffff                                   ;2Bytes base address, 2Bytes segment limit(size)
+dd 0xffff
 dd (2 << 8) | (1 << 12) | (1 << 15) | (15 << 16) | (1 << 21) | (1 << 23)
 
 ; Its helpfull when number of segment is multiply of 2
