@@ -2,19 +2,22 @@ import os
 import subprocess
 
 image = []
-sources = ["boot\stage1.asm", "boot\stage2.asm"]
 
-#build stage1
-build_stage_1 = f"nasm {sources[0]} -o {sources[0].split('.')[0]}"
-subprocess.call(build_stage_1)
+cmds = [
+    ("nasm boot\stage1.asm", "boot\stage1"),
+    ("nasm boot\stage2.asm", "boot\stage2"),
+    ("gcc64 -nostdlib kernel\kernel.c -o kernel64", "kernel\kernel64.exe"),
+    ("strip kernel\kernel64.exe", None)
+]
 
-#build stage2
-build_stage_2 = f"nasm {sources[1]} -o {sources[1].split('.')[0]}"
-subprocess.call(build_stage_2)
+for cmd in cmds:
+    result = subprocess.call(cmd[0])
+    print(f"Execute: {cmd}")
 
-for file in sources:
-    with open(file.split('.')[0],"rb") as f:
-        image.append(f.read())
+for file in cmds:
+    if file[1] is not None:
+        with open(file[1],"rb") as f:
+            image.append(f.read())
 
 #make image
 with open("floppy.bin", "wb") as f:
