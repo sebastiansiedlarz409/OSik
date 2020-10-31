@@ -2,7 +2,7 @@ import os
 import subprocess
 
 image = []
-sources = ["stage1.asm", "stage2.asm"]
+sources = ["boot\stage1.asm", "boot\stage2.asm"]
 
 #build stage1
 build_stage_1 = f"nasm {sources[0]} -o {sources[0].split('.')[0]}"

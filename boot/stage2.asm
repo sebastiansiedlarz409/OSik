@@ -75,14 +75,14 @@ stage64:
     
     ;here we display sign, we will know that execution arrives here
     mov rax, 0xb8000
-    mov word [eax+160*19], 0x0E36
-    mov word [eax+160*19+2], 0x0E34
-    mov word [eax+160*19+4], 0x0E62
-    mov word [eax+160*19+6], 0x0E69
-    mov word [eax+160*19+8], 0x0E74
-    mov word [eax+160*19+10], 0x0E20
-    mov word [eax+160*19+12], 0x0E6f
-    mov word [eax+160*19+14], 0x0E6b 
+    mov word [rax+160*19], 0x0E36
+    mov word [rax+160*19+2], 0x0E34
+    mov word [rax+160*19+4], 0x0E62
+    mov word [rax+160*19+6], 0x0E69
+    mov word [rax+160*19+8], 0x0E74
+    mov word [rax+160*19+10], 0x0E20
+    mov word [rax+160*19+12], 0x0E6f
+    mov word [rax+160*19+14], 0x0E6b 
 
     jmp $
 
@@ -221,12 +221,12 @@ PDE:
 ;U/S - bit 2 - 0 means that only ring 0 can access this region -> https://en.wikipedia.org/wiki/Protection_ring
 ;PWT - bit 3 - caching type ?
 ;PWD - bit 4 - cache disable if 1
-;A - bit 5 - indicates whether software has accessed the 1-GByte page referenced by this entry
-;D - bit 6 - indicates whether software has written to the 1-GByte page referenced by this entry
+;A - bit 5 - indicates whether software has accessed the 2mb page referenced by this entry
+;D - bit 6 - indicates whether software has written to the 2mb page referenced by this entry
 ;PS - bit 7 - page size, must be 1
 ;G - bit 8 - define if translation is global
 ;bits[9:11] - ignored
-;PAT - bit 12 - determines the memory type used to access the 1-GByte page referenced by this entry
+;PAT - bit 12 - determines the memory type used to access the 2mb page referenced by this entry
 ;bits[13:29] - must be 0
 ;bits[30:memory address size - 1] - size of memory address I guess
 ;bits[memory address size:51] - must be 0
