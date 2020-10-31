@@ -18,7 +18,9 @@ stage1:
 
     mov ah, 0x02                ;interrupt 13h command
 
-    mov al, 32                  ;count of sector to load from stage2, 1 sector = 512 bytes
+    mov al, 0x97                ;count of sector to load from stage2, 1 sector = 512 bytes
+    nop
+    nop
     mov ch, 0                   ;cylinder index, in case of floppy it is 0
     mov dh, 0                   ;head index, in case of floppy it is 0
     mov cl, 2                   ;index of first stage2 sector, index start from 1, bits 7-6 = 00
