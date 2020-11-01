@@ -72,6 +72,10 @@ stage32:
 
 stage64:
     [bits 64]
+    mov ax, 0x10                        ;0x10 is data segment id from GDT below
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
     
     ;here we display sign, we will know that execution arrives here
     mov rax, 0xb8000
@@ -82,7 +86,58 @@ stage64:
     mov word [rax+160*19+8], 0x0E74
     mov word [rax+160*19+10], 0x0E20
     mov word [rax+160*19+12], 0x0E6f
-    mov word [rax+160*19+14], 0x0E6b 
+    mov word [rax+160*19+14], 0x0E6b
+
+loader:
+    ;PE FILE STRUCTURE
+    ;https://raw.githubusercontent.com/corkami/pics/master/binary/PE101.png
+    ;https://wiki.osdev.org/PE
+
+    ;extract offset of PE header 4byte value e_lfanew
+    mov esi, [0x10000 + kernel64 + 0x3C]                    ;in rsi we have offset od PE header in file
+    add esi, 0x10000 + kernel64                             ;we add to this offset memory offset
+
+    ;section count 1 byte value NumberOfSections
+    xor rcx, rcx
+    mov cx, [esi + 0x6]
+    
+    ;extract entry point 4 byte value AddressOfEntryPoint
+    mov ebx, [esi + 0x28]
+
+    ;ImageBase
+    ;mov rdx, [esi + 0x30]
+    mov rdx, 0x100000
+
+    ;first section in table offset
+    add esi, 0x108
+
+    cld
+
+    .ph_loop:
+
+    mov r8d, [rsi + 0x8] ; size of segment
+    mov r9d, [rsi + 0xC] ; vaddr where it shoud be copied
+    add r9, rdx
+    mov r10d, [rsi + 0x14] ; section offset in file
+
+    mov r14, rsi
+    mov r15, rcx
+
+    lea rsi, [0x10000 + kernel64 + r10d]                    ;what should be copied, remember to add offset in image
+    mov rdi, r9                                             ;where it should be copied
+    mov rcx, r8                                             ;how many bytes copy
+    rep movsb                                               ;execute copy
+
+    mov rsi, r14
+    mov rcx, r15
+
+    add rsi, 0x28                                           ;move to another section
+    loop .ph_loop
+
+    lea rsp, [0x1fffff]
+    
+    lea rax, [ebx + edx]               ;jump to entry point, _start in kernel
+    call rax
 
     jmp $
 
@@ -235,4 +290,6 @@ PDE:
 ;bits[63] - 1 block code execution from this page, 0 allowes execution
 ;intel 3A - page 130, table 4.18
 dq 1 | (1 << 1) | (1 << 7)
-times 511 dq 0
+times 510 dq 0
+
+kernel64:
