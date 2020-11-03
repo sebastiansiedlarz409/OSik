@@ -105,19 +105,19 @@ loader:
     mov ebx, [esi + 0x28]
 
     ;ImageBase
-    ;mov rdx, [esi + 0x30]
-    mov rdx, 0x100000
+    ;mov r11, [esi + 0x30]
+    mov r11, 0x100000
 
     ;first section in table offset
     add esi, 0x108
 
-    cld
+    cld                                                    ;clear direction flag
 
     .ph_loop:
 
     mov r8d, [rsi + 0x8] ; size of segment
     mov r9d, [rsi + 0xC] ; vaddr where it shoud be copied
-    add r9, rdx
+    add r9, r11
     mov r10d, [rsi + 0x14] ; section offset in file
 
     mov r14, rsi
@@ -134,9 +134,14 @@ loader:
     add rsi, 0x28                                           ;move to another section
     loop .ph_loop
 
-    lea rsp, [0x1fffff]
+    lea rsp, [0x1ff000]
     
-    lea rax, [ebx + edx]               ;jump to entry point, _start in kernel
+    ;args to _start
+    ;page 10 -> https://www.agner.org/optimize/calling_conventions.pdf
+    mov rcx, 0x101000                                       ;first argument
+    mov rdx, rsp                                            ;second argument
+
+    lea rax, [ebx + r11d]                                   ;jump to entry point, _start in kernel
     call rax
 
     jmp $
@@ -290,6 +295,7 @@ PDE:
 ;bits[63] - 1 block code execution from this page, 0 allowes execution
 ;intel 3A - page 130, table 4.18
 dq 1 | (1 << 1) | (1 << 7)
-times 510 dq 0
+times 511 dq 0
 
+times (512 - ($ - $$) % 512) db 0
 kernel64:
