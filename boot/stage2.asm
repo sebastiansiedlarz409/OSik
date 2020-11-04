@@ -94,12 +94,13 @@ loader:
     ;https://wiki.osdev.org/PE
 
     ;extract offset of PE header 4byte value e_lfanew
-    mov esi, [0x10000 + kernel64 + 0x3C]                    ;in rsi we have offset od PE header in file
+    ;we skip MZ part
+    mov esi, [0x10000 + kernel64 + 0x3C]                    ;in rsi we have PE Header in file
     add esi, 0x10000 + kernel64                             ;we add to this offset memory offset
 
     ;section count 1 byte value NumberOfSections
     xor rcx, rcx
-    mov cx, [esi + 0x6]
+    mov cx, [esi + 0x6]                                     ;how many section is in PE file
     
     ;extract entry point 4 byte value AddressOfEntryPoint
     mov ebx, [esi + 0x28]
@@ -108,32 +109,37 @@ loader:
     ;mov r11, [esi + 0x30]
     mov r11, 0x100000
 
-    ;first section in table offset
+    ;offset of first section in table
     add esi, 0x108
 
-    cld                                                    ;clear direction flag
+    cld                                                     ;clear direction flag
 
     .ph_loop:
 
-    mov r8d, [rsi + 0x8] ; size of segment
-    mov r9d, [rsi + 0xC] ; vaddr where it shoud be copied
-    add r9, r11
-    mov r10d, [rsi + 0x14] ; section offset in file
+    mov r8d, [rsi + 0x8]                                    ;size of segment
+    mov r9d, [rsi + 0xC]                                    ;vaddr where it should be copied
+    add r9, r11                                             ;add 0x100000
+    mov r10d, [rsi + 0x14]                                  ;section offset in file
 
+    ;backup registers
     mov r14, rsi
     mov r15, rcx
 
+    ;copy sections
     lea rsi, [0x10000 + kernel64 + r10d]                    ;what should be copied, remember to add offset in image
-    mov rdi, r9                                             ;where it should be copied
+    mov rdi, r9                                             ;where it should be copied in memory
     mov rcx, r8                                             ;how many bytes copy
     rep movsb                                               ;execute copy
 
+    ;restor registers
     mov rsi, r14
     mov rcx, r15
-
-    add rsi, 0x28                                           ;move to another section
+    
+    ;next iteration
+    add rsi, 0x28                                           ;next section is 40 bytes further
     loop .ph_loop
 
+    ;place stack in memory
     lea rsp, [0x1ff000]
     
     ;args to _start
