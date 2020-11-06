@@ -130,6 +130,12 @@ loader:
     mov r14, rsi
     mov r15, rcx
 
+    ;clear destination memory
+    mov rdi, r9
+    mov rcx, r11
+    xor al, al
+    rep stosb
+
     ;copy sections
     lea rsi, [0x10000 + kernel64 + r10d]                    ;what should be copied, remember to add offset in image
     mov rdi, r9                                             ;where it should be copied in memory
@@ -307,7 +313,7 @@ PDE:
 ;intel 3A - page 130, table 4.18
 dq 1 | (1 << 1) | (1 << 7)
 dq 1 | (1 << 1) | (1 << 7) | (0x00200000)
-times 110 dq 0
+times 510 dq 0
 
 times (512 - ($ - $$) % 512) db 0
 kernel64:
