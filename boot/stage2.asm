@@ -3,6 +3,11 @@
                                         ;check "Real mode address space" -> https://wiki.osdev.org/Memory_Map_(x86)
 
 start:
+    ;enable line A20
+    ;https://wiki.osdev.org/A20_Line
+    mov ax, 0x2401
+    int 0x15
+
     mov ax, 0x1000
     mov ds, ax                          ;set data segment address
     mov es, ax                          ;set extra segment address
@@ -140,11 +145,11 @@ loader:
     loop .ph_loop
 
     ;place stack in memory
-    lea rsp, [0x1ff000]
+    lea rsp, [0x1fffff]
     
     ;args to _start
     ;page 10 -> https://www.agner.org/optimize/calling_conventions.pdf
-    mov rcx, 0x101000                                       ;first argument
+    lea rcx, [ebx + r11d]                                   ;first argument
     mov rdx, rsp                                            ;second argument
 
     lea rax, [ebx + r11d]                                   ;jump to entry point, _start in kernel
@@ -293,15 +298,16 @@ PDE:
 ;G - bit 8 - define if translation is global
 ;bits[9:11] - ignored
 ;PAT - bit 12 - determines the memory type used to access the 2mb page referenced by this entry
-;bits[13:29] - must be 0
-;bits[30:memory address size - 1] - size of memory address I guess
+;bits[13:20] - must be 0
+;bits[21:memory address size - 1] - size of memory address I guess
 ;bits[memory address size:51] - must be 0
 ;bits[52:58] - ignored
 ;bits[59:62] - access level, set 0 for ring 0
 ;bits[63] - 1 block code execution from this page, 0 allowes execution
 ;intel 3A - page 130, table 4.18
 dq 1 | (1 << 1) | (1 << 7)
-times 511 dq 0
+dq 1 | (1 << 1) | (1 << 7) | (0x00200000)
+times 110 dq 0
 
 times (512 - ($ - $$) % 512) db 0
 kernel64:
