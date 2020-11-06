@@ -268,7 +268,7 @@ PML4:
 ;bit 6 - ignored
 ;PS - bit 7 - must be 0
 ;bits[8:11] - ignored
-;bits[12:PDPTE size - 1] - pointer to PDPTE, 32 bits lenght i guess
+;bits[12:PDPTE size - 1] - pointer to PDPTE, bits [12:] from PDPTE goes here
 ;bits[PDPTE size:51] - this bits must be 0
 ;bits[52:62] - ignored
 ;XD - bit 63 - 1 block code execution from this page, 0 allowes execution
@@ -305,7 +305,7 @@ PDE:
 ;bits[9:11] - ignored
 ;PAT - bit 12 - determines the memory type used to access the 2mb page referenced by this entry
 ;bits[13:20] - must be 0
-;bits[21:memory address size - 1] - size of memory address I guess
+;bits[21:memory address size - 1] - bits [21:] from physical address goes here
 ;bits[memory address size:51] - must be 0
 ;bits[52:58] - ignored
 ;bits[59:62] - access level, set 0 for ring 0
