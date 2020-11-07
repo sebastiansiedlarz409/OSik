@@ -1,11 +1,11 @@
 //objdump -d -M intel filename
 
 void _welcome(void* kernelEntryPointAddress, void* stackAddress){
-    char* kernelString = "Kernel loaded at";
-    char kernelStringSize = 17;
+    char* kernelString = "Kernel 0x";
+    char kernelStringSize = 9;
 
-    char* stackString = "Stack placed at";
-    char stackStringSize = 16;
+    char* stackString = "Stack 0x";
+    char stackStringSize = 8;
 
     //make unsigned 64 bit number from pointers
     unsigned long long kEPAddress = (unsigned long long)kernelEntryPointAddress;
@@ -21,12 +21,6 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
     }
 
     textVRAM += (kernelStringSize*2);
-
-    textVRAM[0] = '0';
-    textVRAM[1] = 0x01;
-    textVRAM[2] = 'x';
-    textVRAM[3] = 0x01;
-    textVRAM+=4;
 
     for(int i = 0; i < 32; i+=2){
         textVRAM[i] = "0123456789ABCDEF"[(kEPAddress >> 60) & 0xf];
@@ -44,12 +38,6 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
     }
 
     textVRAM += (stackStringSize*2);
-
-    textVRAM[0] = '0';
-    textVRAM[1] = 0x01;
-    textVRAM[2] = 'x';
-    textVRAM[3] = 0x01;
-    textVRAM+=4;
 
     for(int i = 0; i < 32; i+=2){
         textVRAM[i] = "0123456789ABCDEF"[(sAddress >> 60) & 0xf];
