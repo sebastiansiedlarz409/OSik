@@ -46,7 +46,7 @@ while padding:
     padding-=1
 
 #make image
-with open("floppy.bin", "wb") as f:
+with open("image.bin", "wb") as f:
     for b in image:
         f.write(b)
 
