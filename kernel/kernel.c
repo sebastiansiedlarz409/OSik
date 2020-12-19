@@ -66,6 +66,18 @@ void _putchar(char ch){
 
 void _printf(char* value){
     while(*value != '\0'){
+
+        if(*value == '\n'){
+            _scp(VRAM_Context.x, VRAM_Context.y+1);
+            value++;
+            continue;
+        }
+        if(*value == '\r'){
+            _scp(0, VRAM_Context.y);
+            value++;
+            continue;
+        }
+
         _putchar(*value);
         value++;
     }
@@ -137,7 +149,7 @@ void _start(void* kernelEntryPointAddress, void* stackAddress){
 
     _cls();
 
-    _printf("test");
+    _printf("test\r");
 
     for(;;);
 }
