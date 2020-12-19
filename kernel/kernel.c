@@ -4,6 +4,12 @@
 #define LINE_COUNT 25
 #define CHAR_STYLE 0x02
 
+//screen context
+struct VRAM_ContextStruct {
+  unsigned short x;
+  unsigned short y;
+} VRAM_Context;
+
 //PORTS
 //https://wiki.osdev.org/I/O_Ports
 //http://bochs.sourceforge.net/techspec/PORTS.LST
@@ -33,6 +39,36 @@ void _scp(unsigned short x, unsigned short y){
     HAL_PortOutByte(0x3D5, (unsigned char)(position & 0xFF));           //lower 8 bits
     HAL_PortOutByte(0x3D4, 0x0E);
     HAL_PortOutByte(0x3D5, (unsigned char)(position >> 8));
+
+    VRAM_Context.x = x;
+    VRAM_Context.y = y;
+}
+
+void _putchar(char ch){
+    char *textVRAM = (char*)0xB8000;
+
+    unsigned short x = VRAM_Context.x;
+    unsigned short y = VRAM_Context.y;
+
+    unsigned int position = y * (LINE_WIDTH/2) + x;
+
+    textVRAM[position*2] = ch;
+    textVRAM[position*2+1] = CHAR_STYLE;
+
+    x++;
+
+    if(x==80){
+        x=0;
+        y++;
+    }
+    _scp(x,y);
+}
+
+void _printf(char* value){
+    while(*value != '\0'){
+        _putchar(*value);
+        value++;
+    }
 }
 
 void _cls(void){
@@ -100,6 +136,8 @@ void _start(void* kernelEntryPointAddress, void* stackAddress){
     //wait here some time
 
     _cls();
+
+    _printf("test");
 
     for(;;);
 }
