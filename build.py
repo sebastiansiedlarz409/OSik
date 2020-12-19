@@ -6,7 +6,7 @@ image = []
 cmds = [
     ("nasm boot\stage1.asm", "boot\stage1"),
     ("nasm boot\stage2.asm", "boot\stage2"),
-    ("gcc64 -nostdlib kernel\kernel.c -s -o kernel\kernel64", "kernel\kernel64.exe"),
+    ("gcc kernel\kernel.c -std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -s --entry=_start -o kernel\kernel64", "kernel\kernel64.exe"),
 ]
 
 for cmd in cmds:
@@ -46,7 +46,7 @@ while padding:
     padding-=1
 
 #make image
-with open("image.bin", "wb") as f:
+with open("floppy.bin", "wb") as f:
     for b in image:
         f.write(b)
 
