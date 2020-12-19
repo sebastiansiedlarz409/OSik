@@ -69,17 +69,32 @@ void _printf(char* value){
 
         if(*value == '\n'){
             _scp(VRAM_Context.x, VRAM_Context.y+1);
-            value++;
-            continue;
         }
-        if(*value == '\r'){
+        else if(*value == '\r'){
             _scp(0, VRAM_Context.y);
-            value++;
-            continue;
+        }
+        else if(*value == '\t'){
+            unsigned short x = VRAM_Context.x;
+            unsigned short y = VRAM_Context.y;
+
+            x += 8 - x % 8;
+            if (x >= 80) {
+                x = 0;
+                y += 1;
+                _scp(x, y);          
+            }
+            else{
+                for(unsigned short i = VRAM_Context.x; i < x; i++){
+                    _putchar(' ');
+                }
+            }
+        }
+        else{
+            _putchar(*value);
         }
 
-        _putchar(*value);
         value++;
+        
     }
 }
 
@@ -95,61 +110,29 @@ void _cls(void){
     _scp(0, 0);
 }
 
-void _welcome(void* kernelEntryPointAddress, void* stackAddress){
-    char* kernelString = "Kernel 0x";
-    char kernelStringSize = 9;
-
-    char* stackString = "Stack 0x";
-    char stackStringSize = 8;
-
-    //make unsigned 64 bit number from pointers
-    unsigned long long kEPAddress = (unsigned long long)kernelEntryPointAddress;
-    unsigned long long sAddress = (unsigned long long)stackAddress;
-    
-    char *textVRAM = (char*)(0xB8000 + (LINE_WIDTH * 20));
-
-    int offset = 0;
-    for(int i = 0; i < kernelStringSize; i++){
-        textVRAM[offset] = kernelString[i];
-        textVRAM[offset+1] = CHAR_STYLE;
-        offset += 2;
-    }
-
-    textVRAM += (kernelStringSize*2);
+void _printfAddress(void* address){
+    unsigned long long sAddress = (unsigned long long)address;
 
     for(int i = 0; i < 32; i+=2){
-        textVRAM[i] = "0123456789ABCDEF"[(kEPAddress >> 60) & 0xf];
-        textVRAM[i+1] = CHAR_STYLE;
-        kEPAddress <<= 4;
-    }
-
-    textVRAM = (char*)(0xB8000 + (LINE_WIDTH * 21));
-
-    offset = 0;
-    for(int i = 0; i < stackStringSize; i++){
-        textVRAM[offset] = stackString[i];
-        textVRAM[offset+1] = CHAR_STYLE;
-        offset += 2;
-    }
-
-    textVRAM += (stackStringSize*2);
-
-    for(int i = 0; i < 32; i+=2){
-        textVRAM[i] = "0123456789ABCDEF"[(sAddress >> 60) & 0xf];
-        textVRAM[i+1] = CHAR_STYLE;
+        _putchar("0123456789ABCDEF"[(sAddress >> 60) & 0xf]);
         sAddress <<= 4;
     }
+}
+
+void _welcome(void* kernelEntryPointAddress, void* stackAddress){
+    
+    _printf("Kernel loaded at 0x");
+    _printfAddress(kernelEntryPointAddress);
+
+    _printf("\r\nStack pointer at 0x");
+    _printfAddress(stackAddress);
     
 }
 
 void _start(void* kernelEntryPointAddress, void* stackAddress){
-    _welcome(kernelEntryPointAddress, stackAddress);
-
-    //wait here some time
-
     _cls();
-
-    _printf("test\r");
+    
+    _welcome(kernelEntryPointAddress, stackAddress);
 
     for(;;);
 }
