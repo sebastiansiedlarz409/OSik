@@ -1,7 +1,9 @@
 //objdump -d -M intel filename
 
 #include "hal.h"
+#include "common.h"
 #include "terminal.h"
+#include "terminal_B8000_8025.h"
 
 void _welcome(void* kernelEntryPointAddress, void* stackAddress){
     
@@ -14,9 +16,11 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
 }
 
 void _start(void* kernelEntryPointAddress, void* stackAddress){
-    //_cls();
+    TerminalContext* context = Terminal_B8000_8025_GetTerminalContext();
+
+    T_ClearTerminal(context);
     
-    _welcome(kernelEntryPointAddress, stackAddress);
+    //_welcome(kernelEntryPointAddress, stackAddress);
 
     for(;;);
 }

@@ -1,6 +1,7 @@
 #ifndef TERMINAL_H
 #define TERMINAL_H
 
+struct TerminalBackend;
 typedef struct _terminalContext TerminalContext;
 
 struct _terminalContext{

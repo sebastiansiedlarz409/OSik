@@ -54,18 +54,19 @@ void _putchar(TerminalContext* context, char ch){
 }
 
 void _cls(TerminalContext* context){
+    *(char*)0xB8000 = 'a';
     //write whole buffer with value 0x0002
-    char *textVRAM = (char*)0xB8000;
-    for(int i = 0;i<LINE_WIDTH*LINE_COUNT;i+=2){
+    //char *textVRAM = (char*)0xB8000;
+    /*for(int i = 0;i<LINE_WIDTH*LINE_COUNT;i+=2){
         textVRAM[i] = 0x00;
         textVRAM[i+1] = CHAR_STYLE;
-    }
+    }*/
 
     //move cursor to 0, 0
-    _scp(context, 0, 0);
+    //_scp(context, 0, 0);
 }
 
-static TerminalContext context = {
+static const TerminalContext context = {
     ._scp = _scp,
     ._gcp = _gcp,
     ._clear = _cls,
@@ -73,6 +74,6 @@ static TerminalContext context = {
     ._gsize = _gsize
 };
 
-TerminalContext* GetTerminalContext(void){
-    return &context;
+TerminalContext* Terminal_B8000_8025_GetTerminalContext(void){
+    return (TerminalContext*)&context;
 }

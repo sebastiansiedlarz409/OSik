@@ -63,3 +63,8 @@ void T_PutText(TerminalContext* context, const char *value){
         value++;  
     }
 }
+
+void printfChar(TerminalContext* context, char ch){
+    char temp[2] = {ch, '\0'};
+    T_PutText(context, temp);
+}

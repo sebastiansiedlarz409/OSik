@@ -3,6 +3,6 @@
 
 #include "terminal.h"
 
-TerminalContext* GetTerminalContext(void);
+TerminalContext* Terminal_B8000_8025_GetTerminalContext(void);
 
 #endif //TERMINAL_B8000_8021

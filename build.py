@@ -10,7 +10,7 @@ obj_cmds = []
 obj_files = []
 
 gcc_flags = "-std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -c"
-ld_flags = "-std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -o kernel\kernel64"
+ld_flags = "-std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -s -o kernel\kernel64"
 
 # compile *.c files
 for fname in glob("kernel\*.c"):

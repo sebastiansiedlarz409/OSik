@@ -289,7 +289,7 @@ times 511 dq 0
 
 ;Directory
 ;this PDE allow as to add 512 page address because we have 9 bits in virtual address for PDE
-;below we define two page
+;below we define six page
 ;Intel 3A -> page 124
 
 PDE:
@@ -313,7 +313,11 @@ PDE:
 ;intel 3A - page 130, table 4.18
 dq 1 | (1 << 1) | (1 << 7)
 dq 1 | (1 << 1) | (1 << 7) | (0x00200000)
-times 510 dq 0
+dq 1 | (1 << 1) | (1 << 7) | (0x00400000)
+dq 1 | (1 << 1) | (1 << 7) | (0x00600000)
+dq 1 | (1 << 1) | (1 << 7) | (0x00800000)
+dq 1 | (1 << 1) | (1 << 7) | (0x00A00000)
+times 506 dq 0
 
 times (512 - ($ - $$) % 512) db 0
 kernel64:
