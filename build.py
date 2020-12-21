@@ -1,17 +1,43 @@
 import os
 import subprocess
+from glob import glob
 
 image = []
 
+cmds = []
+obj_cmds = []
+
+obj_files = []
+
+gcc_flags = "-std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -c"
+ld_flags = "-std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -o kernel\kernel64"
+
+# compile *.c files
+for fname in glob("kernel\*.c"):
+    binary = f"{fname.split('.')[0]}.o"
+    obj_files.append(binary)
+    obj_cmds.append([f"gcc {fname} {gcc_flags} -o {binary}"])
+
+for cmd in obj_cmds:
+    result = subprocess.check_output(cmd[0], shell=True)
+    print(f"Execute: {cmd[0]}")
+    if result:
+        print(result)
+    print()
+
+#link everything
 cmds = [
-    ("nasm boot\stage1.asm", "boot\stage1"),
-    ("nasm boot\stage2.asm", "boot\stage2"),
-    ("gcc kernel\kernel.c -std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -s --entry=_start -o kernel\kernel64", "kernel\kernel64.exe"),
+    ["nasm boot\stage1.asm", "boot\stage1"],
+    ["nasm boot\stage2.asm", "boot\stage2"],
+    [f"gcc {(' '.join(obj_files))} {ld_flags} --entry=_start -o kernel\kernel64", "kernel\kernel64.exe"],
 ]
 
 for cmd in cmds:
-    result = subprocess.call(cmd[0])
+    result = subprocess.check_output(cmd[0], shell=True)
     print(f"Execute: {cmd[0]}")
+    if result:
+        print(result)
+    print()
 
 padding = 0
 stage2_size = os.stat(cmds[1][1]).st_size

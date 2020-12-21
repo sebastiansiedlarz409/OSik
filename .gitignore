@@ -1,1 +1,3 @@
-bochs/bochsout.txt
+bochs/*.txt
+*.o
+*.exe

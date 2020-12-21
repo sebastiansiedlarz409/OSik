@@ -1,5 +1,7 @@
 //objdump -d -M intel filename
 
+#include "hal.h"
+
 #define LINE_WIDTH 160
 #define LINE_COUNT 25
 #define CHAR_STYLE 0x02
@@ -18,18 +20,6 @@ struct VRAM_ContextStruct {
 //https://wiki.osdev.org/Port_IO
 //inline assembly
 //https://students.mimuw.edu.pl/SO/Projekt03-04/temat2-g6/inline.html
-
-void HAL_PortOutByte(int port, unsigned char v) {
-  __asm("out dx, al\n" : /*output var*/ : /*input var*/ "a" (v), "d" (port) : /*clear regs*/);
-}
-
-void HAL_PortOutWord(int port, unsigned short v) {
-  __asm("out dx, ax\n" : /*output var*/ : /*input var*/ "a" (v), "d" (port) : /*clear regs*/);
-}
-
-void HAL_PortOutDword(int port, unsigned int v) {
-  __asm("out dx, eax\n" : /*output var*/ : /*input var*/ "a" (v), "d" (port) : /*clear regs*/);
-}
 
 void _scp(unsigned short x, unsigned short y){
     //http://wiki.osdev.org/Text_Mode_Cursor#Moving_the_Cursor_with_the_BIOS
