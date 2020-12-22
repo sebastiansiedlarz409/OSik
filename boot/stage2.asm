@@ -112,7 +112,7 @@ loader:
 
     ;ImageBase
     ;mov r11, [esi + 0x30]
-    mov r11, 0x100000
+    mov r11, 0x400000
 
     ;offset of first section in table
     add esi, 0x108
@@ -123,7 +123,7 @@ loader:
 
     mov r8d, [rsi + 0x8]                                    ;size of segment
     mov r9d, [rsi + 0xC]                                    ;vaddr where it should be copied
-    add r9, r11                                             ;add 0x100000
+    add r9, r11                                             ;add 0x400000
     mov r10d, [rsi + 0x14]                                  ;section offset in file
 
     ;backup registers
@@ -151,7 +151,7 @@ loader:
     loop .ph_loop
 
     ;place stack in memory
-    lea rsp, [0x1fffff]
+    lea rsp, [0x3ff000]
     
     ;args to _start
     ;page 10 -> https://www.agner.org/optimize/calling_conventions.pdf

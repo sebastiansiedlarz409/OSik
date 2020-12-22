@@ -5,12 +5,12 @@
 #define LINE_COUNT 25
 #define CHAR_STYLE 0x02
 
-struct VRAM_ContextStruct {
+static struct VRAM_ContextStruct {
   unsigned short x;
   unsigned short y;
 } VRAM_Context;
 
-void _scp(TerminalContext* context, unsigned short x, unsigned short y){
+static void _scp(TerminalContext* context, unsigned short x, unsigned short y){
     //http://wiki.osdev.org/Text_Mode_Cursor#Moving_the_Cursor_with_the_BIOS
     unsigned int position = y * (LINE_WIDTH/2) + x;
 
@@ -23,17 +23,17 @@ void _scp(TerminalContext* context, unsigned short x, unsigned short y){
     VRAM_Context.y = y;
 }
 
-void _gcp(TerminalContext* context, unsigned short* x, unsigned short* y){
+static void _gcp(TerminalContext* context, unsigned short* x, unsigned short* y){
     *x = VRAM_Context.x;
     *y = VRAM_Context.y;
 }
 
-void _gsize(TerminalContext* context, unsigned short* w, unsigned short* h){
+static void _gsize(TerminalContext* context, unsigned short* w, unsigned short* h){
     *w = LINE_WIDTH/2;
     *h = LINE_COUNT;
 }
 
-void _putchar(TerminalContext* context, char ch){
+static void _putchar(TerminalContext* context, char ch){
     char *textVRAM = (char*)0xB8000;
 
     unsigned short x = VRAM_Context.x;
@@ -53,17 +53,16 @@ void _putchar(TerminalContext* context, char ch){
     _scp(context, x,y);
 }
 
-void _cls(TerminalContext* context){
-    *(char*)0xB8000 = 'a';
+static void _cls(TerminalContext* context){
     //write whole buffer with value 0x0002
-    //char *textVRAM = (char*)0xB8000;
-    /*for(int i = 0;i<LINE_WIDTH*LINE_COUNT;i+=2){
+    char *textVRAM = (char*)0xB8000;
+    for(int i = 0;i<LINE_WIDTH*LINE_COUNT;i+=2){
         textVRAM[i] = 0x00;
         textVRAM[i+1] = CHAR_STYLE;
-    }*/
+    }
 
     //move cursor to 0, 0
-    //_scp(context, 0, 0);
+    _scp(context, 0, 0);
 }
 
 static const TerminalContext context = {
