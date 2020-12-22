@@ -1,4 +1,5 @@
 #include "terminal.h"
+#include "common.h"
 
 void T_SetCursorPosition(TerminalContext* context, unsigned short x, unsigned short y){
     context->_scp(context, x, y);
@@ -64,7 +65,69 @@ void T_PutText(TerminalContext* context, const char *value){
     }
 }
 
-void printfChar(TerminalContext* context, char ch){
+void T_PrintfChar(TerminalContext* context, char ch){
     char temp[2] = {ch, '\0'};
     T_PutText(context, temp);
+}
+
+void T_PrintfUInt(TerminalContext* context, size_t ch){
+    if(ch == 0){
+        T_PrintfChar(context, '0');
+        return;
+    }
+
+    char buf[24] = {0};
+    char *p = &buf[24];
+    while (ch != 0) {
+        --p;
+        *p = (ch % 10) + '0';
+        ch /= 10;
+    }
+    T_PutText(context, p);
+}
+
+void T_PrintfInt(TerminalContext *context, long long ch) {
+  if (ch == (-9223372036854775807LL - 1LL)) {
+    T_PutText(context, "-9223372036854775808");
+    return;
+  }
+
+  if (ch < 0) {
+    T_PutChar(context, '-');
+    ch = -ch;
+  }
+
+  if (ch == 0) {
+    T_PutChar(context, '0');
+    return;
+  }
+
+  char buf[24] = {0};
+  char *p = &buf[23];
+  while (ch != 0) {
+    --p;
+    *p = (ch % 10) + '0';
+    ch /= 10;
+  }
+  T_PutText(context, p);
+}
+
+void T_PrintfHex(TerminalContext *context, size_t ch, int width) {
+  if (ch == 0) {
+    T_PutChar(context, '0');
+    return;
+  }
+
+  int sh = 0;
+  while (width < 16 - sh && (ch & 0xF000000000000000ULL) == 0) {
+    sh ++;
+    ch <<= 4;
+  }
+
+  while (sh < 16) {
+    size_t idx = (ch & 0xF000000000000000ULL) >> 60;
+    T_PutChar(context, "0123456789ABCDEF"[idx]);
+    sh ++;
+    ch <<= 4;
+  }
 }

@@ -19,7 +19,7 @@ void _start(void* kernelEntryPointAddress, void* stackAddress){
     TerminalContext* context = Terminal_B8000_8025_GetTerminalContext();
 
     T_ClearTerminal(context);
-    
+    T_PrintfHex(context, 0x1F, 8);
     //_welcome(kernelEntryPointAddress, stackAddress);
 
     for(;;);
