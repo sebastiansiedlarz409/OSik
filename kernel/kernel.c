@@ -5,22 +5,22 @@
 #include "terminal.h"
 #include "terminal_B8000_8025.h"
 
-void _welcome(void* kernelEntryPointAddress, void* stackAddress){
-    
-    /*_printf("Kernel loaded at 0x");
-    _printfAddress(kernelEntryPointAddress);
+TerminalContext* context;
 
-    _printf("\r\nStack pointer at 0x");
-    _printfAddress(stackAddress);*/
+void _welcome(void* kernelEntryPointAddress, void* stackAddress){
+    unsigned long long KEPAddr = (unsigned long long)kernelEntryPointAddress;
+    unsigned long long SAddr = (unsigned long long)stackAddress;
+    printf(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
+
+    printf(context, "Stack pointer at 0x%x\n\r", SAddr);
     
 }
 
 void _start(void* kernelEntryPointAddress, void* stackAddress){
-    TerminalContext* context = Terminal_B8000_8025_GetTerminalContext();
+    context = Terminal_B8000_8025_GetTerminalContext();
 
     T_ClearTerminal(context);
-    T_PrintfHex(context, 0x1F, 8);
-    //_welcome(kernelEntryPointAddress, stackAddress);
+    _welcome(kernelEntryPointAddress, stackAddress);
 
     for(;;);
 }

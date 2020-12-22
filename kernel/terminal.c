@@ -1,6 +1,8 @@
 #include "terminal.h"
 #include "common.h"
 
+#include <stdarg.h>
+
 void T_SetCursorPosition(TerminalContext* context, unsigned short x, unsigned short y){
     context->_scp(context, x, y);
 }
@@ -130,4 +132,56 @@ void T_PrintfHex(TerminalContext *context, size_t ch, int width) {
     sh ++;
     ch <<= 4;
   }
+}
+
+void printf(TerminalContext* context, const char *formatString, ...){
+    va_list args;
+    va_start(args, formatString);
+
+    const char* backup = formatString;
+
+    for(;*backup != '\0';){
+        //case when it is normal character
+        if(*backup != '%'){
+            T_PrintfChar(context, *backup);
+            backup++;
+            continue;
+        }
+
+        backup++;
+
+        if(*backup == 'u'){
+            T_PrintfUInt(context, va_arg(args, size_t));
+            backup++;
+            continue;
+        }
+        if(*backup == 'd'){
+            T_PrintfInt(context, va_arg(args, int));
+            backup++;
+            continue;
+        }
+        if(*backup == 'c'){
+            T_PutChar(context, va_arg(args, int));
+            backup++;
+            continue;
+        }
+        if(*backup == 'x'){
+            T_PrintfHex(context, va_arg(args, size_t), 0);
+            backup++;
+            continue;
+        }
+        if(*backup == 's'){
+            T_PutText(context, va_arg(args, const char*));
+            backup++;
+            continue;
+        }
+        //disable special char %
+        if(*backup == '%'){
+            T_PrintfChar(context, *backup);
+            backup++;
+            continue;
+        }
+    }
+
+    va_end(args);
 }

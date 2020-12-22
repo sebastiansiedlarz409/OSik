@@ -24,5 +24,6 @@ void T_PrintfChar(TerminalContext* context, char ch);
 void T_PrintfUInt(TerminalContext* context, size_t ch);
 void T_PrintfInt(TerminalContext *tb, long long ch);
 void T_PrintfHex(TerminalContext *context, size_t ch, int width);
+void printf(TerminalContext* context, const char *formatString, ...);
 
 #endif //TERMINAL_H
