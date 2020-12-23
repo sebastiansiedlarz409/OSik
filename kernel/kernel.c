@@ -2,6 +2,7 @@
 
 #include "hal.h"
 #include "common.h"
+#include "interrupt.h"
 #include "terminal.h"
 #include "terminal_B8000_8025.h"
 
