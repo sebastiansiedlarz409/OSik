@@ -20,7 +20,18 @@ typedef struct _IDTE {
 //DPL bits[13:14] - ring 0 permission
 //P bit 15 - present
 
-unsigned short ReturnFlags(unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
+//TYPES
+//0xE - interrupt gate - hardware int, disable further int
+//0x6 - trap gate - software int, hardware int are still one
+
+IDTE table[256];
+
+typedef struct _IDTP{
+    unsigned short limit;
+    unsigned long long address;
+} IDTP;
+
+unsigned short SetIDTEntryFlags(unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
     ist &= 0b00000111;
     type &= 0b00001111;
     dpl &= 0b00000111;
@@ -29,17 +40,13 @@ unsigned short ReturnFlags(unsigned char ist, unsigned char type, unsigned char 
     return ist | (type << 8) | (dpl << 13) | (p << 15);
 }
 
-IDTE ReturnEntry(unsigned long long address, unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
-    unsigned short flags = ReturnFlags(ist, type, dpl, p);
-    IDTE entry = {
-        .offset_63_32 = (address >> 32),
-        .offset_31_16 = ((address && 0xFFFF0000) >> 16),
-        .offset_15_0 = (address && 0xFFFF),
-        .flags = flags,
-        .seg_selector = 0x8
-    };
-
-    return entry;
+void SetIDTEntry(IDTE* idte, unsigned long long address, unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
+    unsigned short flags = SetIDTEntryFlags(ist, type, dpl, p);
+    idte->offset_63_32 = (address >> 32);
+    idte->offset_31_16 = ((address && 0xFFFF0000) >> 16);
+    idte->offset_15_0 = (address && 0xFFFF);
+    idte->flags = flags;
+    idte->seg_selector = 0x8;
 }
 
 //IDT SECTION END
