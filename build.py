@@ -9,8 +9,8 @@ obj_cmds = []
 
 obj_files = []
 
-gcc_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -c"
-ld_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -s -o kernel\kernel64"
+gcc_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -c -ggdb"
+ld_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -s -ggdb -o kernel\kernel64"
 
 # compile *.c files
 for fname in glob("kernel\*.c"):
@@ -76,4 +76,4 @@ with open("floppy.bin", "wb") as f:
     for b in image:
         f.write(b)
 
-subprocess.call("bochs -f bochs\osdev.bochsrc")
+subprocess.call("bochsdbg -f bochs\osdev.bochsrc")

@@ -8,6 +8,7 @@
 
 TerminalContext* context;
 
+
 void _welcome(void* kernelEntryPointAddress, void* stackAddress){
     unsigned long long KEPAddr = (unsigned long long)kernelEntryPointAddress;
     unsigned long long SAddr = (unsigned long long)stackAddress;
@@ -18,10 +19,18 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
 }
 
 void _start(void* kernelEntryPointAddress, void* stackAddress){
+    //set interrupts
+    SetIDTR();
+    
     context = Terminal_B8000_8025_GetTerminalContext();
 
     T_ClearTerminal(context);
     _welcome(kernelEntryPointAddress, stackAddress);
+
+    int a = 0, b = 0;
+    __asm__ volatile("div %2\n"
+       : "=d" (a), "=a" (b)
+       : "r" (a), "d" (a), "a" (a));
 
     for(;;);
 }

@@ -7,6 +7,11 @@ start:
     ;https://wiki.osdev.org/A20_Line
     mov ax, 0x2401
     int 0x15
+    in al, 0x92
+    or al, 2
+    out 0x92, al
+
+    cli
 
     mov ax, 0x1000
     mov ds, ax                          ;set data segment address
@@ -311,13 +316,18 @@ PDE:
 ;bits[59:62] - access level, set 0 for ring 0
 ;bits[63] - 1 block code execution from this page, 0 allowes execution
 ;intel 3A - page 130, table 4.18
-dq 1 | (1 << 1) | (1 << 7)
-dq 1 | (1 << 1) | (1 << 7) | (0x00200000)
-dq 1 | (1 << 1) | (1 << 7) | (0x00400000)
-dq 1 | (1 << 1) | (1 << 7) | (0x00600000)
-dq 1 | (1 << 1) | (1 << 7) | (0x00800000)
-dq 1 | (1 << 1) | (1 << 7) | (0x00A00000)
-times 506 dq 0
+;dq 1 | (1 << 1) | (1 << 7)
+;dq 1 | (1 << 1) | (1 << 7) | (0x00200000)
+;dq 1 | (1 << 1) | (1 << 7) | (0x00400000)
+;dq 1 | (1 << 1) | (1 << 7) | (0x00600000)
+;dq 1 | (1 << 1) | (1 << 7) | (0x00800000)
+;dq 1 | (1 << 1) | (1 << 7) | (0x00A00000)
+;times 506 dq 0
+%assign i 0
+%rep 512
+  dq 0x200000*i+0x83
+%assign i i+1
+%endrep
 
 times (512 - ($ - $$) % 512) db 0
 kernel64:

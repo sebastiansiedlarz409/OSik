@@ -1,4 +1,7 @@
 #include "interrupt.h"
+#include "interrupt_handlers.h"
+
+#include <stdint.h>
 
 //IDT SECTION
 
@@ -6,14 +9,15 @@
 //FOR LONG MODE -> Intel 3A, page 210m chapter 6.14
 //Interrupt list -> Intel 3A, page 192
 
-typedef struct _IDTE {
-  unsigned short offset_15_0;           //part of handler address
-  unsigned short seg_selector;          //segment selector from GDT (0x8)
-  unsigned short flags;                 //description below
-  unsigned short offset_31_16;          //part of handler address
-  unsigned int offset_63_32;            //part of handler address
-  unsigned int reserved;                //reserved by cpu
-} IDTE;
+struct _IDTE {
+  uint16_t offset_15_0;           //part of handler address
+  uint16_t seg_selector;          //segment selector from GDT (0x8)
+  uint16_t flags;                 //description below
+  uint16_t offset_31_16;          //part of handler address
+  uint32_t offset_63_32;            //part of handler address
+  uint32_t reserved;                //reserved by cpu
+};
+typedef struct _IDTE IDTE;
 
 //IST bits[0:2] - Interrupt Stack Table
 //TYPE bits[8:11] - Table Intel 3A, page 102, table 3-2, interrupt desc gate for 64 bits
@@ -26,27 +30,33 @@ typedef struct _IDTE {
 
 IDTE table[256];
 
-typedef struct _IDTP{
-    unsigned short limit;
-    unsigned long long address;
-} IDTP;
+struct _IDTP{
+    uint16_t limit;
+    uint64_t address;
+} __attribute__((packed)) ;
+typedef struct _IDTP IDTP;
 
-unsigned short SetIDTEntryFlags(unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
-    ist &= 0b00000111;
-    type &= 0b00001111;
-    dpl &= 0b00000111;
-    p &= 0b00000001;
-
-    return ist | (type << 8) | (dpl << 13) | (p << 15);
+uint16_t SetIDTEntryFlags(unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
+    return (uint16_t)(ist | (type << 8) | (dpl << 13) | (p << 15));
 }
 
-void SetIDTEntry(IDTE* idte, unsigned long long address, unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
-    unsigned short flags = SetIDTEntryFlags(ist, type, dpl, p);
+void SetIDTEntry(IDTE* idte, uint64_t address, unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
     idte->offset_63_32 = (address >> 32);
-    idte->offset_31_16 = ((address && 0xFFFF0000) >> 16);
-    idte->offset_15_0 = (address && 0xFFFF);
-    idte->flags = flags;
+    idte->offset_31_16 = ((address & 0xFFFF0000) >> 16);
+    idte->offset_15_0 = (address & 0xFFFF);
+    idte->flags = SetIDTEntryFlags(ist, type, dpl, p);
     idte->seg_selector = 0x8;
+}
+
+void SetIDTR(void){
+    SetIDTEntry(&table[0], (uint64_t)DivideError_Handler, 0, 0xE, 0, 1);
+    
+    IDTP idtp = {
+        256*16-1,
+        (uint64_t)&table
+    };
+
+    __asm("lidt %0" : : "m"(idtp));
 }
 
 //IDT SECTION END
