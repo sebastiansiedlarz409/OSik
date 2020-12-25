@@ -7,7 +7,7 @@ TerminalContext* context;
 void DivideError_Handler(void){
     context = Terminal_B8000_8025_GetTerminalContext();
 
-    printf(context, "DIVIDE BY ZERO ERROR\n\r");
+    print(context, "DIVIDE BY ZERO ERROR\n\r");
 
     for(;;);
 }

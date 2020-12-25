@@ -50,8 +50,8 @@ void SetIDTEntry(IDTE* idte, uint64_t address, uint8_t ist, uint8_t type, uint8_
 
 void SetIDTR(void){
     SetIDTEntry(&table[0], (uint64_t)DivideError_Handler, 0, 0xE, 0, 1);
-    SetIDTEntry(&table[60], (uint64_t)DivideError_Handler, 0, 0xE, 0, 1);
     
+    //INTEL 3A, page 200
     IDTP idtp = {
         256*16-1,
         (uint64_t)&table

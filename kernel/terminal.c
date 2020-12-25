@@ -89,7 +89,7 @@ void T_PrintfUInt(TerminalContext* context, size_t ch){
     T_PutText(context, p);
 }
 
-void T_PrintfInt(TerminalContext *context, uint64_t ch) {
+void T_PrintfInt(TerminalContext *context, int64_t ch) {
   if (ch == (-9223372036854775807LL - 1LL)) {
     T_PutText(context, "-9223372036854775808");
     return;
@@ -135,7 +135,7 @@ void T_PrintfHex(TerminalContext *context, size_t ch, uint32_t width) {
   }
 }
 
-void printf(TerminalContext* context, const char *formatString, ...){
+void print(TerminalContext* context, const char *formatString, ...){
     va_list args;
     va_start(args, formatString);
 

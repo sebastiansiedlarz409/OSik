@@ -24,8 +24,8 @@ void T_GetTerminalSize(TerminalContext* context, uint16_t* w, uint16_t* h);
 void T_PutText(TerminalContext* context, const char *value);
 void T_PrintfChar(TerminalContext* context, char ch);
 void T_PrintfUInt(TerminalContext* context, size_t ch);
-void T_PrintfInt(TerminalContext *tb, uint64_t ch);
+void T_PrintfInt(TerminalContext *tb, int64_t ch);
 void T_PrintfHex(TerminalContext *context, size_t ch, uint32_t width);
-void printf(TerminalContext* context, const char *formatString, ...);
+void print(TerminalContext* context, const char *formatString, ...);
 
 #endif //TERMINAL_H
