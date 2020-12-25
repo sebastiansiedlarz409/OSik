@@ -1,18 +1,22 @@
 #include "hal.h"
+#include "common.h"
 #include "terminal.h"
+
+#include <stdint.h>
 
 #define LINE_WIDTH 160
 #define LINE_COUNT 25
 #define CHAR_STYLE 0x02
 
 static struct VRAM_ContextStruct {
-  unsigned short x;
-  unsigned short y;
+  uint16_t x;
+  uint16_t y;
 } VRAM_Context;
 
-static void _scp(TerminalContext* context, unsigned short x, unsigned short y){
+static void _scp(TerminalContext* context, uint16_t x, uint16_t y){
+    UNUSED(context);
     //http://wiki.osdev.org/Text_Mode_Cursor#Moving_the_Cursor_with_the_BIOS
-    unsigned int position = y * (LINE_WIDTH/2) + x;
+    uint32_t position = y * (LINE_WIDTH/2) + x;
 
     HAL_PortOutByte(0x3D4, 0x0F);                                       //tell that we want change reg 0x0F in 0x3D5 port
     HAL_PortOutByte(0x3D5, (unsigned char)(position & 0xFF));           //lower 8 bits
@@ -23,12 +27,14 @@ static void _scp(TerminalContext* context, unsigned short x, unsigned short y){
     VRAM_Context.y = y;
 }
 
-static void _gcp(TerminalContext* context, unsigned short* x, unsigned short* y){
+static void _gcp(TerminalContext* context, uint16_t* x, uint16_t* y){
+    UNUSED(context);
     *x = VRAM_Context.x;
     *y = VRAM_Context.y;
 }
 
-static void _gsize(TerminalContext* context, unsigned short* w, unsigned short* h){
+static void _gsize(TerminalContext* context, uint16_t* w, uint16_t* h){
+    UNUSED(context);
     *w = LINE_WIDTH/2;
     *h = LINE_COUNT;
 }
@@ -36,10 +42,10 @@ static void _gsize(TerminalContext* context, unsigned short* w, unsigned short* 
 static void _putchar(TerminalContext* context, char ch){
     char *textVRAM = (char*)0xB8000;
 
-    unsigned short x = VRAM_Context.x;
-    unsigned short y = VRAM_Context.y;
+    uint16_t x = VRAM_Context.x;
+    uint16_t y = VRAM_Context.y;
 
-    unsigned int position = y * (LINE_WIDTH/2) + x;
+    uint32_t position = y * (LINE_WIDTH/2) + x;
 
     textVRAM[position*2] = ch;
     textVRAM[position*2+1] = CHAR_STYLE;

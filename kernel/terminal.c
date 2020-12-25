@@ -2,12 +2,13 @@
 #include "common.h"
 
 #include <stdarg.h>
+#include <stdint.h>
 
-void T_SetCursorPosition(TerminalContext* context, unsigned short x, unsigned short y){
+void T_SetCursorPosition(TerminalContext* context, uint16_t x, uint16_t y){
     context->_scp(context, x, y);
 }
 
-void T_GetCursorPosition(TerminalContext* context, unsigned short* x, unsigned short* y){
+void T_GetCursorPosition(TerminalContext* context, uint16_t* x, uint16_t* y){
     context->_gcp(context, x, y);
 }
 
@@ -15,7 +16,7 @@ void T_ClearTerminal(TerminalContext* context){
     context->_clear(context);
 }
 
-void T_GetTerminalSize(TerminalContext* context, unsigned short* w, unsigned short* h){
+void T_GetTerminalSize(TerminalContext* context, uint16_t* w, uint16_t* h){
     context->_gsize(context, w, h);
 }
 
@@ -24,12 +25,12 @@ void T_PutChar(TerminalContext* context, char ch){
 }
 
 void T_PutText(TerminalContext* context, const char *value){
-    unsigned short x;
-    unsigned short y;
-    unsigned short xb;
-    unsigned short yb;
-    unsigned short w;
-    unsigned short h;
+    uint16_t x;
+    uint16_t y;
+    uint16_t xb;
+    uint16_t yb;
+    uint16_t w;
+    uint16_t h;
 
     while(*value != '\0'){
 
@@ -54,7 +55,7 @@ void T_PutText(TerminalContext* context, const char *value){
                 T_SetCursorPosition(context, x, y);          
             }
             else{
-                for(unsigned short i = xb; i < x; i++){
+                for(uint16_t i = xb; i < x; i++){
                     T_PutChar(context, ' ');
                 }
             }
@@ -88,7 +89,7 @@ void T_PrintfUInt(TerminalContext* context, size_t ch){
     T_PutText(context, p);
 }
 
-void T_PrintfInt(TerminalContext *context, long long ch) {
+void T_PrintfInt(TerminalContext *context, uint64_t ch) {
   if (ch == (-9223372036854775807LL - 1LL)) {
     T_PutText(context, "-9223372036854775808");
     return;
@@ -114,13 +115,13 @@ void T_PrintfInt(TerminalContext *context, long long ch) {
   T_PutText(context, p);
 }
 
-void T_PrintfHex(TerminalContext *context, size_t ch, int width) {
+void T_PrintfHex(TerminalContext *context, size_t ch, uint32_t width) {
   if (ch == 0) {
     T_PutChar(context, '0');
     return;
   }
 
-  int sh = 0;
+  uint32_t sh = 0;
   while (width < 16 - sh && (ch & 0xF000000000000000ULL) == 0) {
     sh ++;
     ch <<= 4;
@@ -156,12 +157,12 @@ void printf(TerminalContext* context, const char *formatString, ...){
             continue;
         }
         if(*backup == 'd'){
-            T_PrintfInt(context, va_arg(args, int));
+            T_PrintfInt(context, va_arg(args, uint32_t));
             backup++;
             continue;
         }
         if(*backup == 'c'){
-            T_PutChar(context, va_arg(args, int));
+            T_PutChar(context, va_arg(args, uint32_t));
             backup++;
             continue;
         }

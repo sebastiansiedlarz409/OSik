@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #include "hal.h"
 
 //PORTS
@@ -9,14 +11,14 @@
 //inline assembly
 //https://students.mimuw.edu.pl/SO/Projekt03-04/temat2-g6/inline.html
 
-void HAL_PortOutByte(int port, unsigned char v) {
+void HAL_PortOutByte(uint32_t port, uint8_t v) {
   __asm("out dx, al\n" : /*output var*/ : /*input var*/ "a" (v), "d" (port) : /*clear regs*/);
 }
 
-void HAL_PortOutWord(int port, unsigned short v) {
+void HAL_PortOutWord(uint32_t port, uint16_t v) {
   __asm("out dx, ax\n" : /*output var*/ : /*input var*/ "a" (v), "d" (port) : /*clear regs*/);
 }
 
-void HAL_PortOutDword(int port, unsigned int v) {
+void HAL_PortOutDword(uint32_t port, uint32_t v) {
   __asm("out dx, eax\n" : /*output var*/ : /*input var*/ "a" (v), "d" (port) : /*clear regs*/);
 }

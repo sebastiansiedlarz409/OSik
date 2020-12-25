@@ -76,4 +76,4 @@ with open("floppy.bin", "wb") as f:
     for b in image:
         f.write(b)
 
-subprocess.call("bochsdbg -f bochs\osdev.bochsrc")
+subprocess.call("bochs -f bochs\osdev.bochsrc")

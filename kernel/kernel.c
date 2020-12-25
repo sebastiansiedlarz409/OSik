@@ -1,4 +1,5 @@
 //objdump -d -M intel filename
+#include <stdint.h>
 
 #include "hal.h"
 #include "common.h"
@@ -8,14 +9,12 @@
 
 TerminalContext* context;
 
-
 void _welcome(void* kernelEntryPointAddress, void* stackAddress){
-    unsigned long long KEPAddr = (unsigned long long)kernelEntryPointAddress;
-    unsigned long long SAddr = (unsigned long long)stackAddress;
-    printf(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
+    uint64_t KEPAddr = (uint64_t)kernelEntryPointAddress;
+    uint64_t SAddr = (uint64_t)stackAddress;
 
+    printf(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
     printf(context, "Stack pointer at 0x%x\n\r", SAddr);
-    
 }
 
 void _start(void* kernelEntryPointAddress, void* stackAddress){

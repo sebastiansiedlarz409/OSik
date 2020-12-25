@@ -36,11 +36,11 @@ struct _IDTP{
 } __attribute__((packed)) ;
 typedef struct _IDTP IDTP;
 
-uint16_t SetIDTEntryFlags(unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
+uint16_t SetIDTEntryFlags(uint8_t ist, uint8_t type, uint8_t dpl, uint8_t p){
     return (uint16_t)(ist | (type << 8) | (dpl << 13) | (p << 15));
 }
 
-void SetIDTEntry(IDTE* idte, uint64_t address, unsigned char ist, unsigned char type, unsigned char dpl, unsigned char p){
+void SetIDTEntry(IDTE* idte, uint64_t address, uint8_t ist, uint8_t type, uint8_t dpl, uint8_t p){
     idte->offset_63_32 = (address >> 32);
     idte->offset_31_16 = ((address & 0xFFFF0000) >> 16);
     idte->offset_15_0 = (address & 0xFFFF);
@@ -50,6 +50,7 @@ void SetIDTEntry(IDTE* idte, uint64_t address, unsigned char ist, unsigned char 
 
 void SetIDTR(void){
     SetIDTEntry(&table[0], (uint64_t)DivideError_Handler, 0, 0xE, 0, 1);
+    SetIDTEntry(&table[60], (uint64_t)DivideError_Handler, 0, 0xE, 0, 1);
     
     IDTP idtp = {
         256*16-1,
