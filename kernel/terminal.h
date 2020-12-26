@@ -14,6 +14,7 @@ struct _terminalContext{
     void (*_clear)(TerminalContext* context);
     void (*_putchar)(TerminalContext* context, char ch);
     void (*_gsize)(TerminalContext* context, uint16_t* w, uint16_t* h);
+    void (*_style)(TerminalContext* context, uint8_t style);
 };
 
 void T_SetCursorPosition(TerminalContext* context, uint16_t x, uint16_t y);
@@ -26,6 +27,7 @@ void T_PrintfChar(TerminalContext* context, char ch);
 void T_PrintfUInt(TerminalContext* context, size_t ch);
 void T_PrintfInt(TerminalContext *tb, int64_t ch);
 void T_PrintfHex(TerminalContext *context, size_t ch, uint32_t width);
+void T_StyleTerminal(TerminalContext *context, uint8_t style);
 void print(TerminalContext* context, const char *formatString, ...);
 
 #endif //TERMINAL_H

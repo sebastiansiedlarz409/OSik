@@ -16,6 +16,10 @@ void T_ClearTerminal(TerminalContext* context){
     context->_clear(context);
 }
 
+void T_StyleTerminal(TerminalContext* context, uint8_t style){
+    context->_style(context, style);
+}
+
 void T_GetTerminalSize(TerminalContext* context, uint16_t* w, uint16_t* h){
     context->_gsize(context, w, h);
 }

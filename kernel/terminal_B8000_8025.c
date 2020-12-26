@@ -7,12 +7,17 @@
 
 #define LINE_WIDTH 160
 #define LINE_COUNT 25
-#define CHAR_STYLE 0x02
+uint8_t CHAR_STYLE = 0x02;
 
 static struct VRAM_ContextStruct {
   uint16_t x;
   uint16_t y;
 } VRAM_Context;
+
+static void _style(TerminalContext* context, uint8_t style){
+    UNUSED(context);
+    CHAR_STYLE = style;
+}
 
 static void _scp(TerminalContext* context, uint16_t x, uint16_t y){
     UNUSED(context);
@@ -98,7 +103,8 @@ static const TerminalContext context = {
     ._gcp = _gcp,
     ._clear = _cls,
     ._putchar = _putchar,
-    ._gsize = _gsize
+    ._gsize = _gsize,
+    ._style = _style
 };
 
 TerminalContext* Terminal_B8000_8025_GetTerminalContext(void){
