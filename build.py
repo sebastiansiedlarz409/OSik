@@ -9,7 +9,7 @@ obj_cmds = []
 
 obj_files = []
 
-gcc_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -c -ggdb"
+gcc_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -mgeneral-regs-only -c -ggdb"
 ld_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -s -ggdb -o kernel\kernel64"
 
 # compile *.c files

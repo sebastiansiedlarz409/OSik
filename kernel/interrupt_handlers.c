@@ -1,13 +1,7 @@
+#include "error.h"
 #include "interrupt_handlers.h"
-#include "terminal.h"
-#include "terminal_B8000_8025.h"
 
-TerminalContext* context;
-
-void DivideError_Handler(void){
-    context = Terminal_B8000_8025_GetTerminalContext();
-
-    print(context, "DIVIDE BY ZERO ERROR\n\r");
-
-    __asm__("leave; iretq");
+__attribute__((interrupt)) void DivideError_Handler(TrapFrame *trapFrame)
+{
+    BSOD("DIVIDE BY ZERO ERROR", trapFrame);
 }

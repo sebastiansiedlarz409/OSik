@@ -7,16 +7,16 @@
 
 #define LINE_WIDTH 160
 #define LINE_COUNT 25
-uint8_t CHAR_STYLE = 0x02;
 
 static struct VRAM_ContextStruct {
   uint16_t x;
   uint16_t y;
+  uint8_t style;
 } VRAM_Context;
 
 static void _style(TerminalContext* context, uint8_t style){
     UNUSED(context);
-    CHAR_STYLE = style;
+    VRAM_Context.style = style;
 }
 
 static void _scp(TerminalContext* context, uint16_t x, uint16_t y){
@@ -41,7 +41,7 @@ static void _scroll(TerminalContext* context){
 
     for(int i = LINE_COUNT*LINE_WIDTH-LINE_WIDTH;i<LINE_COUNT*LINE_WIDTH;i+=2){
         textVRAM[i] = 0x00;
-        textVRAM[i+1] = CHAR_STYLE;
+        textVRAM[i+1] = VRAM_Context.style;
     }
 
     _scp(context, 0, LINE_COUNT-1);
@@ -74,7 +74,7 @@ static void _putchar(TerminalContext* context, char ch){
     uint32_t position = y * (LINE_WIDTH/2) + x;
 
     textVRAM[position*2] = ch;
-    textVRAM[position*2+1] = CHAR_STYLE;
+    textVRAM[position*2+1] = VRAM_Context.style;
 
     x++;
 
@@ -91,7 +91,7 @@ static void _cls(TerminalContext* context){
     char *textVRAM = (char*)0xB8000;
     for(int i = 0;i<LINE_WIDTH*LINE_COUNT;i+=2){
         textVRAM[i] = 0x00;
-        textVRAM[i+1] = CHAR_STYLE;
+        textVRAM[i+1] = VRAM_Context.style;
     }
 
     //move cursor to 0, 0
@@ -108,5 +108,6 @@ static const TerminalContext context = {
 };
 
 TerminalContext* Terminal_B8000_8025_GetTerminalContext(void){
+    VRAM_Context.style = 0x02;
     return (TerminalContext*)&context;
 }
