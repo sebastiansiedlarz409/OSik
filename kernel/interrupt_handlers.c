@@ -9,5 +9,5 @@ void DivideError_Handler(void){
 
     print(context, "DIVIDE BY ZERO ERROR\n\r");
 
-    for(;;);
+    __asm__("leave; iretq");
 }
