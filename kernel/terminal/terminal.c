@@ -1,5 +1,5 @@
 #include "terminal.h"
-#include "common.h"
+#include "..\common.h"
 
 #include <stdarg.h>
 #include <stdint.h>

@@ -1,6 +1,6 @@
-#include "hal.h"
-#include "common.h"
-#include "memory.h"
+#include "..\hal\hal.h"
+#include "..\common.h"
+#include "..\lib\memory.h"
 #include "terminal.h"
 
 #include <stdint.h>

@@ -1,7 +1,7 @@
 #ifndef TERMINAL_H
 #define TERMINAL_H
 
-#include "common.h"
+#include "..\common.h"
 
 #include <stdint.h>
 

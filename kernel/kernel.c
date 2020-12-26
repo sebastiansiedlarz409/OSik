@@ -1,11 +1,11 @@
 //objdump -d -M intel filename
 #include <stdint.h>
 
-#include "hal.h"
+#include "hal\hal.h"
 #include "common.h"
-#include "interrupt.h"
-#include "terminal.h"
-#include "terminal_B8000_8025.h"
+#include "int\interrupt.h"
+#include "terminal\terminal.h"
+#include "terminal\terminal_B8000_8025.h"
 
 TerminalContext* context;
 

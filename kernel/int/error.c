@@ -1,7 +1,7 @@
 #include "error.h"
-#include "interrupt_handlers.h"
-#include "terminal.h"
-#include "terminal_B8000_8025.h"
+#include "..\int\interrupt_handlers.h"
+#include "..\terminal\terminal.h"
+#include "..\terminal\terminal_B8000_8025.h"
 
 TerminalContext* context;
 

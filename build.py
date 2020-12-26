@@ -12,7 +12,17 @@ obj_files = []
 gcc_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -mgeneral-regs-only -c -ggdb"
 ld_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -s -ggdb -o kernel\kernel64"
 
-# compile *.c files
+dirs = [d for d in os.listdir("kernel") if os.path.isdir(os.path.join("kernel", d))]
+print(dirs)
+
+#compile *.c
+for d in dirs:
+    for fname in glob(f"kernel\{d}\*.c"):
+        binary = f"{fname.split('.')[0]}.o"
+        obj_files.append(binary)
+        obj_cmds.append([f"gcc {fname} {gcc_flags} -o {binary}"])
+
+# compile *.c in main kernel directory
 for fname in glob("kernel\*.c"):
     binary = f"{fname.split('.')[0]}.o"
     obj_files.append(binary)
