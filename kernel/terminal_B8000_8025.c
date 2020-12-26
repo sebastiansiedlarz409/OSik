@@ -1,5 +1,6 @@
 #include "hal.h"
 #include "common.h"
+#include "memory.h"
 #include "terminal.h"
 
 #include <stdint.h>
@@ -27,6 +28,20 @@ static void _scp(TerminalContext* context, uint16_t x, uint16_t y){
     VRAM_Context.y = y;
 }
 
+static void _scroll(TerminalContext* context){
+    char *textVRAM = (char*)0xB8000;
+
+    //copy memory
+    memmove(textVRAM+LINE_WIDTH, textVRAM, LINE_COUNT*LINE_WIDTH-LINE_WIDTH);
+
+    for(int i = LINE_COUNT*LINE_WIDTH-LINE_WIDTH;i<LINE_COUNT*LINE_WIDTH;i+=2){
+        textVRAM[i] = 0x00;
+        textVRAM[i+1] = CHAR_STYLE;
+    }
+
+    _scp(context, 0, LINE_COUNT-1);
+}
+
 static void _gcp(TerminalContext* context, uint16_t* x, uint16_t* y){
     UNUSED(context);
     *x = VRAM_Context.x;
@@ -45,6 +60,12 @@ static void _putchar(TerminalContext* context, char ch){
     uint16_t x = VRAM_Context.x;
     uint16_t y = VRAM_Context.y;
 
+    if(y == LINE_COUNT){
+        _scroll(context);
+        x = VRAM_Context.x;
+        y = VRAM_Context.y;
+    }
+
     uint32_t position = y * (LINE_WIDTH/2) + x;
 
     textVRAM[position*2] = ch;
@@ -56,6 +77,7 @@ static void _putchar(TerminalContext* context, char ch){
         x=0;
         y++;
     }
+
     _scp(context, x,y);
 }
 
