@@ -3,6 +3,6 @@
 
 #include "interrupt_handlers.h"
 
-void BSOD(const char* reason, TrapFrame* frame);
+void BSOD(const char* reason, void* frame);
 
 #endif //ERROR_H

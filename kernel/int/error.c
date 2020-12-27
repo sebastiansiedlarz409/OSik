@@ -5,30 +5,49 @@
 
 TerminalContext* context;
 
-void BSOD(const char* reason, TrapFrame* frame){
+void BSOD(const char* reason, void* frame){
     context = Terminal_B8000_8025_GetTerminalContext();
+
+    uint64_t* frameBuffer = (uint64_t*)frame;
+
+    uint64_t r15 = *(frameBuffer);
+    uint64_t r14 = *(frameBuffer+1);
+    uint64_t r13 = *(frameBuffer+2);
+    uint64_t r12 = *(frameBuffer+3);
+    uint64_t r11 = *(frameBuffer+4);
+    uint64_t r10 = *(frameBuffer+5);
+    uint64_t r9 = *(frameBuffer+6);
+    uint64_t r8 = *(frameBuffer+7);
+    uint64_t rbp = *(frameBuffer+8);
+    uint64_t rdi = *(frameBuffer+9);
+    uint64_t rsi = *(frameBuffer+10);
+    uint64_t rdx = *(frameBuffer+11);
+    uint64_t rcx = *(frameBuffer+12);
+    uint64_t rbx = *(frameBuffer+13);
+    uint64_t rax = *(frameBuffer+14);
+    uint64_t rsp = *(frameBuffer+15);
+    uint64_t rip = *(frameBuffer+16);
 
     T_StyleTerminal(context, 0x17);
     T_ClearTerminal(context);
     print(context, "%s\n\r", reason);
-    print(context, "RSP -> %x\n\r", frame->rsp);
-    print(context, "RAX -> %x\n\r", frame->rax);
-    print(context, "RBX -> %x\n\r", frame->rbx);
-    print(context, "RCX -> %x\n\r", frame->rcx);
-    print(context, "RDX -> %x\n\r", frame->rdx);
-    print(context, "RSI -> %x\n\r", frame->rsi);
-    print(context, "RDI -> %x\n\r", frame->rdi);
-    print(context, "RBB -> %x\n\r", frame->rbp);
-    print(context, "R8  -> %x\n\r", frame->r8);
-    print(context, "R9  -> %x\n\r", frame->r9);
-    print(context, "R10 -> %x\n\r", frame->r10);
-    print(context, "R11 -> %x\n\r", frame->r11);
-    print(context, "R12 -> %x\n\r", frame->r12);
-    print(context, "R13 -> %x\n\r", frame->r13);
-    print(context, "R14 -> %x\n\r", frame->r14);
-    print(context, "R15 -> %x\n\r", frame->r15);
-    print(context, "RIP -> %x\n\r", frame->rip);
-    print(context, "SEG -> %x\n\r", frame->segment_cs);
+    print(context, "R15 -> %x\r\n", r15);
+    print(context, "R14 -> %x\r\n", r14);
+    print(context, "R13 -> %x\r\n", r13);
+    print(context, "R12 -> %x\r\n", r12);
+    print(context, "R11 -> %x\r\n", r11);
+    print(context, "R10 -> %x\r\n", r10);
+    print(context, "R9  -> %x\r\n", r9);
+    print(context, "R8  -> %x\r\n", r8);
+    print(context, "RBP -> %x\r\n", rbp);
+    print(context, "RDI -> %x\r\n", rdi);
+    print(context, "RSI -> %x\r\n", rsi);
+    print(context, "RDX -> %x\r\n", rdx);
+    print(context, "RCX -> %x\r\n", rcx);
+    print(context, "RBX -> %x\r\n", rbx);
+    print(context, "RAX -> %x\r\n", rax);
+    print(context, "RSP -> %x\r\n", rsp);
+    print(context, "RIP -> %x\r\n", rip);
 
     for(;;);
 }

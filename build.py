@@ -11,9 +11,9 @@ obj_files = []
 
 gcc_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -mgeneral-regs-only -c -ggdb"
 ld_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -s -ggdb -o kernel\kernel64"
+asm_flags = "-masm=intel -c"
 
 dirs = [d for d in os.listdir("kernel") if os.path.isdir(os.path.join("kernel", d))]
-print(dirs)
 
 #compile *.c
 for d in dirs:
@@ -22,11 +22,24 @@ for d in dirs:
         obj_files.append(binary)
         obj_cmds.append([f"gcc {fname} {gcc_flags} -o {binary}"])
 
+#compile *.s
+for d in dirs:
+    for fname in glob(f"kernel\{d}\*.s"):
+        binary = f"{fname.split('.')[0]}.obj"
+        obj_files.append(binary)
+        obj_cmds.append([f"gcc {fname} {asm_flags} -o {binary}"])
+
 # compile *.c in main kernel directory
 for fname in glob("kernel\*.c"):
     binary = f"{fname.split('.')[0]}.o"
     obj_files.append(binary)
     obj_cmds.append([f"gcc {fname} {gcc_flags} -o {binary}"])
+
+# compile *.s in main kernel directory
+for fname in glob("kernel\*.s"):
+    binary = f"{fname.split('.')[0]}.obj"
+    obj_files.append(binary)
+    obj_cmds.append([f"gcc {fname} {asm_flags} -o {binary}"])
 
 for cmd in obj_cmds:
     result = subprocess.check_output(cmd[0], shell=True)
@@ -86,4 +99,4 @@ with open("floppy.bin", "wb") as f:
     for b in image:
         f.write(b)
 
-subprocess.call("bochs -f bochs\osdev.bochsrc")
+subprocess.call("bochsdbg -f bochs\osdev.bochsrc")
