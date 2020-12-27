@@ -26,7 +26,8 @@ void BSOD(const char* reason, void* frame){
     uint64_t rbx = *(frameBuffer+13);
     uint64_t rax = *(frameBuffer+14);
     uint64_t rsp = *(frameBuffer+15);
-    uint64_t rip = *(frameBuffer+16);
+    uint64_t eflags = *(frameBuffer+16);
+    uint64_t rip = *(frameBuffer+17);
 
     T_StyleTerminal(context, 0x17);
     T_ClearTerminal(context);
@@ -47,7 +48,9 @@ void BSOD(const char* reason, void* frame){
     print(context, "RBX -> %x\r\n", rbx);
     print(context, "RAX -> %x\r\n", rax);
     print(context, "RSP -> %x\r\n", rsp);
-    print(context, "RIP -> %x\r\n", rip);
+    print(context, "RIP -> %x\r\n\r\n", rip);
+
+    print(context, "EFLAGS -> %x\r\n", eflags);
 
     for(;;);
 }

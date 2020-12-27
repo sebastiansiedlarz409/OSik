@@ -4,6 +4,7 @@
 .extern DivideError_Handler
 .text
 DivideError_Wrapper:
+  pushfq
   push rsp
   push rax
   push rbx
@@ -41,5 +42,6 @@ DivideError_Wrapper:
   pop rbx
   pop rax
   add rsp, 8
+  popfq
 
   iretq
