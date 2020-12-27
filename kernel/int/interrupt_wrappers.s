@@ -2,8 +2,10 @@
 .intel_syntax noprefix
 .global DivideError_Wrapper
 .extern DivideError_Handler
+
 .text
-DivideError_Wrapper:
+
+.macro PUSHA
   pushfq
   push rsp
   push rax
@@ -21,11 +23,9 @@ DivideError_Wrapper:
   push r13
   push r14
   push r15
+.endm
 
-  mov rcx, rsp
-
-  call DivideError_Handler
-
+.macro POPA
   pop r15
   pop r14
   pop r13
@@ -43,5 +43,11 @@ DivideError_Wrapper:
   pop rax
   add rsp, 8
   popfq
+.endm
 
+DivideError_Wrapper:
+  PUSHA  
+  mov rcx, rsp
+  call DivideError_Handler
+  POPA
   iretq
