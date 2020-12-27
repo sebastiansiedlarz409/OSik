@@ -26,10 +26,14 @@ void _start(void* kernelEntryPointAddress, void* stackAddress){
     T_ClearTerminal(context);
     _welcome(kernelEntryPointAddress, stackAddress);
 
-    int a = 0, b = 0;
+    //test int 0
+    /*int a = 0, b = 0;
     __asm__ volatile("div %2\n"
        : "=d" (a), "=a" (b)
-       : "r" (a), "d" (a), "a" (a));
+       : "r" (a), "d" (a), "a" (a));*/
+
+    //test int 6
+    //__asm("mov cr6, eax");
 
     for(;;);
 }

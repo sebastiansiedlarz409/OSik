@@ -37,6 +37,8 @@ struct _IDTP{
 typedef struct _IDTP IDTP;
 
 extern void DivideError_Wrapper(void);
+extern void BoundError_Wrapper(void);
+extern void InvalidOpcodeError_Wrapper(void);
 
 uint16_t SetIDTEntryFlags(uint8_t ist, uint8_t type, uint8_t dpl, uint8_t p){
     return (uint16_t)(ist | (type << 8) | (dpl << 13) | (p << 15));
@@ -52,7 +54,9 @@ void SetIDTEntry(IDTE* idte, uint64_t address, uint8_t ist, uint8_t type, uint8_
 
 void SetIDTR(void){
     SetIDTEntry(&table[0], (uint64_t)DivideError_Wrapper, 0, 0xE, 0, 1);
-    
+    SetIDTEntry(&table[5], (uint64_t)BoundError_Wrapper, 0, 0xE, 0, 1);
+    SetIDTEntry(&table[6], (uint64_t)InvalidOpcodeError_Wrapper, 0, 0xE, 0, 1);
+
     //INTEL 3A, page 200
     IDTP idtp = {
         256*16-1,

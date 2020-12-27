@@ -2,6 +2,10 @@
 .intel_syntax noprefix
 .global DivideError_Wrapper
 .extern DivideError_Handler
+.global BoundError_Wrapper
+.extern BoundError_Handler
+.global InvalidOpcodeError_Wrapper
+.extern InvalidOpcodeError_Handler
 
 .text
 
@@ -49,5 +53,19 @@ DivideError_Wrapper:
   PUSHA  
   mov rcx, rsp
   call DivideError_Handler
+  POPA
+  iretq
+
+BoundError_Wrapper:
+  PUSHA  
+  mov rcx, rsp
+  call BoundError_Handler
+  POPA
+  iretq
+
+InvalidOpcodeError_Wrapper:
+  PUSHA  
+  mov rcx, rsp
+  call InvalidOpcodeError_Handler
   POPA
   iretq
