@@ -6,6 +6,10 @@
 .extern BoundError_Handler
 .global InvalidOpcodeError_Wrapper
 .extern InvalidOpcodeError_Handler
+.global DeviceNotAvailableError_Wrapper
+.extern DeviceNotAvailableError_Handler
+.global InvalidTSSError_Wrapper
+.extern InvalidTSSError_Handler
 
 .text
 
@@ -67,5 +71,19 @@ InvalidOpcodeError_Wrapper:
   PUSHA  
   mov rcx, rsp
   call InvalidOpcodeError_Handler
+  POPA
+  iretq
+
+DeviceNotAvailableError_Wrapper:
+  PUSHA  
+  mov rcx, rsp
+  call DeviceNotAvailableError_Handler
+  POPA
+  iretq
+
+InvalidTSSError_Wrapper:
+  PUSHA  
+  mov rcx, rsp
+  call InvalidTSSError_Handler
   POPA
   iretq
