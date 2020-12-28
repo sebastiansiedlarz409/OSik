@@ -190,3 +190,11 @@ void print(TerminalContext* context, const char *formatString, ...){
 
     va_end(args);
 }
+
+void T_NewLine(TerminalContext* context){
+    print(context, "\n\r");
+}
+
+void T_RemoveChar(TerminalContext *context){
+    context->_removechar(context);
+}

@@ -86,6 +86,31 @@ static void _putchar(TerminalContext* context, char ch){
     _scp(context, x,y);
 }
 
+static void _removechar(TerminalContext* context){
+    char *textVRAM = (char*)0xB8000;
+
+    uint16_t x = VRAM_Context.x;
+    uint16_t y = VRAM_Context.y;
+
+    if(y == 0 && x == 0){
+        return;
+    }
+
+    x--;
+
+    if(x==0){
+        x=80;
+        y--;
+    }
+
+    _scp(context, x, y);
+
+    uint32_t position = y * (LINE_WIDTH/2) + x;
+
+    textVRAM[position*2] = 0;
+    textVRAM[position*2+1] = VRAM_Context.style;
+}
+
 static void _cls(TerminalContext* context){
     //write whole buffer with value 0x0002
     char *textVRAM = (char*)0xB8000;
@@ -103,6 +128,7 @@ static const TerminalContext context = {
     ._gcp = _gcp,
     ._clear = _cls,
     ._putchar = _putchar,
+    ._removechar = _removechar,
     ._gsize = _gsize,
     ._style = _style
 };

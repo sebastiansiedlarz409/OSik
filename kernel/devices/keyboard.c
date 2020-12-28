@@ -8,13 +8,20 @@
 
 TerminalContext* context;
 
+typedef enum _KB_WriteMode{
+    COMMAND = 0x1,
+    DATA = 0x2
+} KB_WriteMode;
+
 typedef struct _KB_Context{
     uint8_t counter;
     uint8_t upper;
+    uint8_t writeMode;
 } KB_Context;
 
 KB_Context kb_context = {
-    .counter = 0
+    .counter = 0,
+    .writeMode = DATA
 };
 
 char KB_GetChar(uint8_t scanCode)
@@ -38,6 +45,16 @@ void KB_Print(uint8_t scanCode)
             }
             else{
                 kb_context.upper = 1;
+            }
+        }
+        else if(scanCode == 0x1C || scanCode == 0x9C){ //enter
+            if(kb_context.writeMode == DATA){
+                T_NewLine(context);
+            }
+        }
+        else if(scanCode == 0xE || scanCode == 0x8E){ //backspace
+            if(kb_context.writeMode == DATA){
+                T_RemoveChar(context);
             }
         }
         else{
