@@ -10,6 +10,7 @@ TerminalContext* context;
 
 typedef struct _KB_Context{
     uint8_t counter;
+    uint8_t upper;
 } KB_Context;
 
 KB_Context kb_context = {
@@ -26,10 +27,29 @@ char KB_GetChar(uint8_t scanCode)
 
 void KB_Print(uint8_t scanCode)
 {
-    char ch = KB_GetChar(scanCode);
-
     if(kb_context.counter == 0){
-        T_PutChar(context, ch);
+
+        if(scanCode == 0x01 || scanCode == 0x81){ //esc
+            T_ClearTerminal(context);
+        }
+        else if(scanCode == 0x2A || scanCode == 0x36 || scanCode == 0xAA || scanCode == 0xB6){ //shift
+            if(kb_context.upper){
+                kb_context.upper = 1;
+            }
+            else{
+                kb_context.upper = 1;
+            }
+        }
+        else{
+            char ch = KB_GetChar(scanCode);
+            
+            if (kb_context.upper) //if shift
+                if(ch - 32 >= 32)
+                    ch -= 32;
+
+            T_PutChar(context, ch);
+            kb_context.upper = 0;
+        }
         kb_context.counter++;
     }
     else{
