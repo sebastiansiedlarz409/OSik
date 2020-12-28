@@ -44,10 +44,9 @@ void PIC_Init(uint8_t offset1, uint8_t offset2){    //offsets in IDT -> 0x8, 0x7
 }
 
 void PIC_ClearInt(uint8_t irq){
-    if(irq >= 8)
-        HAL_PortOutByte(PIC2_COMMAND, PIC_END);
-
+    //if(irq >= 8)
     HAL_PortOutByte(PIC1_COMMAND, PIC_END);
+    HAL_PortOutByte(PIC2_COMMAND, PIC_END);
 }
 
 void PIC_Disable(void){

@@ -2,6 +2,8 @@
 .intel_syntax noprefix
 .global DivideError_Wrapper
 .extern DivideError_Handler
+.global KeyboardInt_Wrapper
+.extern KeyboardInt_Handler
 
 .text
 
@@ -49,5 +51,12 @@ DivideError_Wrapper:
   PUSHA  
   mov rcx, rsp
   call DivideError_Handler
+  POPA
+  iretq
+
+KeyboardInt_Wrapper:
+  PUSHA  
+  mov rcx, rsp
+  call KeyboardInt_Handler
   POPA
   iretq
