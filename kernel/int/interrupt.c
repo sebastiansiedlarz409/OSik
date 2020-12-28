@@ -1,3 +1,4 @@
+#include "pic.h"
 #include "interrupt.h"
 #include "interrupt_handlers.h"
 
@@ -37,10 +38,6 @@ struct _IDTP{
 typedef struct _IDTP IDTP;
 
 extern void DivideError_Wrapper(void);
-extern void BoundError_Wrapper(void);
-extern void InvalidOpcodeError_Wrapper(void);
-extern void DeviceNotAvailableError_Wrapper(void);
-extern void InvalidTSSError_Wrapper(void);
 
 uint16_t SetIDTEntryFlags(uint8_t ist, uint8_t type, uint8_t dpl, uint8_t p){
     return (uint16_t)(ist | (type << 8) | (dpl << 13) | (p << 15));
@@ -56,11 +53,8 @@ void SetIDTEntry(IDTE* idte, uint64_t address, uint8_t ist, uint8_t type, uint8_
 
 void SetIDTR(void){
     SetIDTEntry(&table[0], (uint64_t)DivideError_Wrapper, 0, 0xE, 0, 1);
-    SetIDTEntry(&table[5], (uint64_t)BoundError_Wrapper, 0, 0xE, 0, 1);
-    SetIDTEntry(&table[6], (uint64_t)InvalidOpcodeError_Wrapper, 0, 0xE, 0, 1);
-    SetIDTEntry(&table[7], (uint64_t)DeviceNotAvailableError_Wrapper, 0, 0xE, 0, 1);
-    SetIDTEntry(&table[10], (uint64_t)InvalidTSSError_Wrapper, 0, 0xE, 0, 1);
-    
+    for(uint32_t i = 0;i<256;i++)
+        SetIDTEntry(&table[i], (uint64_t)DivideError_Wrapper, 0, 0xE, 0, 1);
 
     //INTEL 3A, page 200
     IDTP idtp = {
@@ -69,6 +63,9 @@ void SetIDTR(void){
     };
 
     __asm("lidt %0" : : "m"(idtp));
+    __asm("sti");
+
+    PIC_Disable();
 }
 
 //IDT SECTION END

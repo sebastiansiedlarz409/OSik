@@ -32,8 +32,5 @@ void _start(void* kernelEntryPointAddress, void* stackAddress){
        : "=d" (a), "=a" (b)
        : "r" (a), "d" (a), "a" (a));*/
 
-    //test int 6
-    //__asm("mov cr6, eax");
-
     for(;;);
 }
