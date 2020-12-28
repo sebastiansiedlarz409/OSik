@@ -57,6 +57,46 @@ void KB_Print(uint8_t scanCode)
                 T_RemoveChar(context);
             }
         }
+        else if((scanCode >= 0x3B && scanCode <= 0x44) || (scanCode >= 0x57 && scanCode <= 0x58) ||
+                 (scanCode >= 0xBB && scanCode <= 0xC4) || (scanCode >= 0xD7 && scanCode <= 0xD8)){ //F1, F2...
+
+            if(scanCode == 0x3B || scanCode == 0xBB){
+                T_StyleTerminal(context, 0x02);
+            }
+            if(scanCode == 0x3C || scanCode == 0xBC){
+                T_StyleTerminal(context, 0x01);
+            }
+            if(scanCode == 0x3D || scanCode == 0xBD){
+                T_StyleTerminal(context, 0x03);
+            }
+            if(scanCode == 0x3E || scanCode == 0xBE){
+                T_StyleTerminal(context, 0x04);
+            }
+            if(scanCode == 0x3F || scanCode == 0xBF){
+                T_StyleTerminal(context, 0x05);
+            }
+            if(scanCode == 0x40 || scanCode == 0xC0){
+                T_StyleTerminal(context, 0x06);
+            }
+            if(scanCode == 0x41 || scanCode == 0xC1){
+                T_StyleTerminal(context, 0x0E);
+            }
+            if(scanCode == 0x42 || scanCode == 0xC2){
+                T_StyleTerminal(context, 0x0D);
+            }
+            if(scanCode == 0x43 || scanCode == 0xC3){
+                T_StyleTerminal(context, 0x0C);
+            }
+            if(scanCode == 0x44 || scanCode == 0xC4){
+                T_StyleTerminal(context, 0x0B);
+            }
+            if(scanCode == 0x57 || scanCode == 0xD7){
+                T_StyleTerminal(context, 0x0F);
+            }
+            if(scanCode == 0x58 || scanCode == 0xD8){
+                T_StyleTerminal(context, 0x01);
+            }
+        }
         else{
             char ch = KB_GetChar(scanCode);
             

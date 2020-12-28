@@ -14,9 +14,13 @@ static struct VRAM_ContextStruct {
   uint8_t style;
 } VRAM_Context;
 
+static struct VRAM_ContextStruct vram_context = {
+    .style = 0x02
+};
+
 static void _style(TerminalContext* context, uint8_t style){
     UNUSED(context);
-    VRAM_Context.style = style;
+    vram_context.style = style;
 }
 
 static void _scp(TerminalContext* context, uint16_t x, uint16_t y){
@@ -29,8 +33,8 @@ static void _scp(TerminalContext* context, uint16_t x, uint16_t y){
     HAL_PortOutByte(0x3D4, 0x0E);
     HAL_PortOutByte(0x3D5, (unsigned char)(position >> 8));
 
-    VRAM_Context.x = x;
-    VRAM_Context.y = y;
+    vram_context.x = x;
+    vram_context.y = y;
 }
 
 static void _scroll(TerminalContext* context){
@@ -41,7 +45,7 @@ static void _scroll(TerminalContext* context){
 
     for(int i = LINE_COUNT*LINE_WIDTH-LINE_WIDTH;i<LINE_COUNT*LINE_WIDTH;i+=2){
         textVRAM[i] = 0x00;
-        textVRAM[i+1] = VRAM_Context.style;
+        textVRAM[i+1] = vram_context.style;
     }
 
     _scp(context, 0, LINE_COUNT-1);
@@ -49,8 +53,8 @@ static void _scroll(TerminalContext* context){
 
 static void _gcp(TerminalContext* context, uint16_t* x, uint16_t* y){
     UNUSED(context);
-    *x = VRAM_Context.x;
-    *y = VRAM_Context.y;
+    *x = vram_context.x;
+    *y = vram_context.y;
 }
 
 static void _gsize(TerminalContext* context, uint16_t* w, uint16_t* h){
@@ -62,19 +66,19 @@ static void _gsize(TerminalContext* context, uint16_t* w, uint16_t* h){
 static void _putchar(TerminalContext* context, char ch){
     char *textVRAM = (char*)0xB8000;
 
-    uint16_t x = VRAM_Context.x;
-    uint16_t y = VRAM_Context.y;
+    uint16_t x = vram_context.x;
+    uint16_t y = vram_context.y;
 
     if(y == LINE_COUNT){
         _scroll(context);
-        x = VRAM_Context.x;
-        y = VRAM_Context.y;
+        x = vram_context.x;
+        y = vram_context.y;
     }
 
     uint32_t position = y * (LINE_WIDTH/2) + x;
 
     textVRAM[position*2] = ch;
-    textVRAM[position*2+1] = VRAM_Context.style;
+    textVRAM[position*2+1] = vram_context.style;
 
     x++;
 
@@ -89,8 +93,8 @@ static void _putchar(TerminalContext* context, char ch){
 static void _removechar(TerminalContext* context){
     char *textVRAM = (char*)0xB8000;
 
-    uint16_t x = VRAM_Context.x;
-    uint16_t y = VRAM_Context.y;
+    uint16_t x = vram_context.x;
+    uint16_t y = vram_context.y;
 
     if(y == 0 && x == 0){
         return;
@@ -108,7 +112,7 @@ static void _removechar(TerminalContext* context){
     uint32_t position = y * (LINE_WIDTH/2) + x;
 
     textVRAM[position*2] = 0;
-    textVRAM[position*2+1] = VRAM_Context.style;
+    textVRAM[position*2+1] = vram_context.style;
 }
 
 static void _cls(TerminalContext* context){
@@ -116,7 +120,7 @@ static void _cls(TerminalContext* context){
     char *textVRAM = (char*)0xB8000;
     for(int i = 0;i<LINE_WIDTH*LINE_COUNT;i+=2){
         textVRAM[i] = 0x00;
-        textVRAM[i+1] = VRAM_Context.style;
+        textVRAM[i+1] = vram_context.style;
     }
 
     //move cursor to 0, 0
@@ -134,6 +138,5 @@ static const TerminalContext context = {
 };
 
 TerminalContext* Terminal_B8000_8025_GetTerminalContext(void){
-    VRAM_Context.style = 0x02;
     return (TerminalContext*)&context;
 }

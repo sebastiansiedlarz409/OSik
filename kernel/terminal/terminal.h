@@ -5,7 +5,6 @@
 
 #include <stdint.h>
 
-struct TerminalBackend;
 typedef struct _terminalContext TerminalContext;
 
 struct _terminalContext{
