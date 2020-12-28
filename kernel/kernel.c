@@ -1,11 +1,11 @@
 //objdump -d -M intel filename
-#include <stdint.h>
-
 #include "hal\hal.h"
 #include "common.h"
 #include "int\interrupt.h"
 #include "terminal\terminal.h"
 #include "terminal\terminal_B8000_8025.h"
+
+#include <stdint.h>
 
 TerminalContext* context;
 
@@ -19,7 +19,7 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
 
 void _start(void* kernelEntryPointAddress, void* stackAddress){
     //set interrupts
-    SetIDTR();
+    INT_SetIDTR();
     
     context = Terminal_B8000_8025_GetTerminalContext();
 

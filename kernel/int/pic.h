@@ -21,8 +21,7 @@ typedef enum _PIC_COMMANDS{
 } PIC_COMMANDS;
 
 void PIC_Init(uint8_t offset1, uint8_t offset2);
-void PIC_ClearInt(uint8_t irq);
+void PIC_ClearInt(void);
 void PIC_Disable(void);
-void PIC_SetMask(void);
 
 #endif //PIC_H
