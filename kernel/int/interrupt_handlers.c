@@ -5,6 +5,8 @@
 #include "../int/pic.h"
 #include "../devices/keyboard.h"
 
+#include <stdint.h>
+
 //https://wiki.osdev.org/Exceptions
 
 void DivideError_Handler(void *trapFrame)
