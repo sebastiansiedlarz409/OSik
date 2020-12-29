@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-uint64_t PIT_COUNTER = 0;
+uint8_t PIT_COUNTER = 0;
 
 void IncreaseTick(void);
 

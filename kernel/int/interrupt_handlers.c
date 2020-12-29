@@ -16,6 +16,7 @@ void DivideError_Handler(void *trapFrame)
 
 void KeyboardInt_Handler(void* trapFrame)
 {
+    BSOD("DIVIDE BY ZERO ERROR", trapFrame);
     UNUSED(trapFrame);
     KB_Interrupt();
 }

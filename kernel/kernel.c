@@ -20,7 +20,7 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
 void _start(void* kernelEntryPointAddress, void* stackAddress){
     //set interrupts
     INT_SetIDTR();
-    
+
     context = Terminal_B8000_8025_GetTerminalContext();
 
     T_ClearTerminal(context);
