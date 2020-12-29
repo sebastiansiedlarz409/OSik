@@ -12,7 +12,7 @@ struct B8000_8025_Context {
   uint16_t x;
   uint16_t y;
   uint8_t style;
-} a;
+};
 
 static struct B8000_8025_Context B8000_8025_context = {
     .style = 0x02

@@ -156,7 +156,7 @@ loader:
     loop .ph_loop
 
     ;place stack in memory
-    lea rsp, [0x3ff000]
+    lea rsp, [0x3f0000]
     
     ;args to _start
     ;page 10 -> https://www.agner.org/optimize/calling_conventions.pdf
