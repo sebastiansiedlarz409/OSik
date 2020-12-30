@@ -17,6 +17,9 @@ void T_GetCursorPosition(TerminalContext* context, uint16_t* x, uint16_t* y)
 void T_ClearTerminal(TerminalContext* context)
 {
     context->_clear(context);
+    if(context->_gmode(context) == COMMAND){
+        print(context, "%c", terminalChar);
+    }
 }
 
 void T_StyleTerminal(TerminalContext* context, uint8_t style)
@@ -205,7 +208,12 @@ void print(TerminalContext* context, const char *formatString, ...)
 
 void T_NewLine(TerminalContext* context)
 {
-    print(context, "\n\r");
+    if(context->_gmode(context) == COMMAND){
+        print(context, "\n\r%c", terminalChar);
+    }
+    else{
+        print(context, "\r\n");
+    }
 }
 
 void T_RemoveChar(TerminalContext *context)

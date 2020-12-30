@@ -5,6 +5,11 @@
 
 #include <stdint.h>
 
+enum TerminalMode{
+    COMMAND = 0x1,
+    DATA = 0x2
+};
+
 typedef struct _terminalContext TerminalContext;
 
 struct _terminalContext{
@@ -15,6 +20,8 @@ struct _terminalContext{
     void (*_removechar)(TerminalContext* context);
     void (*_gsize)(TerminalContext* context, uint16_t* w, uint16_t* h);
     void (*_style)(TerminalContext* context, uint8_t style);
+    void (*_tmode)(TerminalContext* context);
+    uint8_t (*_gmode)(TerminalContext* context);
 };
 
 void T_SetCursorPosition(TerminalContext* context, uint16_t x, uint16_t y);

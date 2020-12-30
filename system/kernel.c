@@ -22,6 +22,10 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress)
     print(context, "Stack pointer at 0x%x\n\r", SAddr);
     print(context, "[ESC] to clear screen\n\r");
     print(context, "[F1/F2/...] to style terminal\n\r");
+
+    T_StyleTerminal(context, 0x0F);
+
+    print(context, "%c", terminalChar);
 }
 
 void _start(void* kernelEntryPointAddress, void* stackAddress)

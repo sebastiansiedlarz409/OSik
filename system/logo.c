@@ -10,6 +10,8 @@ void LOGO_ShowLogo(void)
 
     T_StyleTerminal(context, 0x0C);
 
+    T_SetCursorPosition(context, 0, 0);
+
     print(context, "########                  #                     \r\n");
     print(context, "#      #                  #                     \r\n");
     print(context, "#      #              #   #                     \r\n");

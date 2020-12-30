@@ -12,9 +12,11 @@ struct B8000_8025_Context {
   uint16_t x;
   uint16_t y;
   uint8_t style;
+  uint8_t mode;
 };
 
 static struct B8000_8025_Context B8000_8025_context = {
+    .mode = COMMAND,
     .style = 0x02
 };
 
@@ -135,6 +137,18 @@ static void B8000_8025_Cls(TerminalContext* context)
     B8000_8025_Scp(context, 0, 0);
 }
 
+static uint8_t B8000_8025_GMode(TerminalContext* context)
+{
+    UNUSED(context);
+    return B8000_8025_context.mode;
+}
+
+static void B8000_8025_TMode(TerminalContext* context)
+{
+    UNUSED(context);
+    B8000_8025_context.mode = B8000_8025_context.mode == COMMAND ? DATA : COMMAND;
+}
+
 static const TerminalContext context = {
     ._scp = B8000_8025_Scp,
     ._gcp = B8000_8025_Gcp,
@@ -142,7 +156,9 @@ static const TerminalContext context = {
     ._putchar = B8000_8025_Putchar,
     ._removechar = B8000_8025_Removechar,
     ._gsize = B8000_8025_Gsize,
-    ._style = B8000_8025_Style
+    ._style = B8000_8025_Style,
+    ._tmode = B8000_8025_TMode,
+    ._gmode = B8000_8025_GMode
 };
 
 TerminalContext* Terminal_B8000_8025_GetTerminalContext(void)

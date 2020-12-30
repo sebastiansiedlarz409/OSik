@@ -7,11 +7,6 @@
 
 TerminalContext* context;
 
-typedef enum _KB_WriteMode{
-    COMMAND = 0x1,
-    DATA = 0x2
-} KB_WriteMode;
-
 typedef struct _KB_Context{
     uint8_t counter;
     uint8_t upper;
@@ -97,26 +92,22 @@ void KB_Print(uint8_t scanCode)
             }
         }
         else if(scanCode == 0x1C || scanCode == 0x9C){ //enter
-            if(kb_context.writeMode == DATA){
-                T_NewLine(context);
-            }
+            T_NewLine(context);
         }
         else if(scanCode == 0xE || scanCode == 0x8E){ //backspace
-            if(kb_context.writeMode == DATA){
-                T_RemoveChar(context);
-            }
+            T_RemoveChar(context);
         }
         else if((scanCode >= 0x3B && scanCode <= 0x44) || (scanCode >= 0x57 && scanCode <= 0x58) ||
                  (scanCode >= 0xBB && scanCode <= 0xC4) || (scanCode >= 0xD7 && scanCode <= 0xD8)){ //F1, F2...
 
             if(scanCode == 0x3B || scanCode == 0xBB){
-                T_StyleTerminal(context, 0x02);
+                T_StyleTerminal(context, 0x0F);
             }
             if(scanCode == 0x3C || scanCode == 0xBC){
-                T_StyleTerminal(context, 0x01);
+                T_StyleTerminal(context, 0x02);
             }
             if(scanCode == 0x3D || scanCode == 0xBD){
-                T_StyleTerminal(context, 0x03);
+                T_StyleTerminal(context, 0x01);
             }
             if(scanCode == 0x3E || scanCode == 0xBE){
                 T_StyleTerminal(context, 0x04);
@@ -140,7 +131,7 @@ void KB_Print(uint8_t scanCode)
                 T_StyleTerminal(context, 0x0B);
             }
             if(scanCode == 0x57 || scanCode == 0xD7){
-                T_StyleTerminal(context, 0x0F);
+                T_StyleTerminal(context, 0x03);
             }
             if(scanCode == 0x58 || scanCode == 0xD8){
                 T_StyleTerminal(context, 0x01);
