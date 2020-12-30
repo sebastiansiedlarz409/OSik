@@ -4,6 +4,8 @@
 .extern DivideError_Handler
 .global KeyboardInt_Wrapper
 .extern KeyboardInt_Handler
+.global PITInt_Wrapper
+.extern PITInt_Handler
 
 .text
 
@@ -61,3 +63,9 @@ KeyboardInt_Wrapper:
   POPA
   iretq
   
+PITInt_Wrapper:
+  PUSHA  
+  mov rcx, rsp
+  call PITInt_Handler
+  POPA
+  iretq  

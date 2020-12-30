@@ -3,5 +3,6 @@
 
 void DivideError_Handler(void* trapFrame);
 void KeyboardInt_Handler(void* trapFrame);
+void PITInt_Handler(void* trapFrame);
 
 #endif //INTERRUPT_HANDLER_H
