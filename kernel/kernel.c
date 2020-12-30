@@ -16,13 +16,15 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
 
     print(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
     print(context, "Stack pointer at 0x%x\n\r", SAddr);
+    print(context, "[ESC] to clear screen\n\r");
+    print(context, "[F1/F2/...] to style terminal\n\r");
 }
 
 void _start(void* kernelEntryPointAddress, void* stackAddress){
     //set interrupts
     INT_SetIDTR();
     
-    PIT_Sleep(3000);
+    PIT_Sleep(5000);
 
     context = Terminal_B8000_8025_GetTerminalContext();
 

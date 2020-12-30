@@ -22,8 +22,7 @@ void PIT_Init(void)
 {
     PIT_CH0_ENABLE = 1;
 
-    //HAL_PortOutByte(PIT_COMMAND, PIT_SetConfig(PIT_CH0_CHANNELS, PIT_AC_HLB, PIT_M0, PIT_BIN));
-    HAL_PortOutByte(PIT_COMMAND, 0b00110100);
+    HAL_PortOutByte(PIT_COMMAND, PIT_SetConfig(PIT_CH0_CHANNELS, PIT_AC_HLB, PIT_M2, PIT_BIN));
     HAL_PortOutByte(PIT_CH0_COMMAND, divisor & 0xFF); //low
     HAL_PortOutByte(PIT_CH0_COMMAND, (divisor >> 8) & 0xFF); //high
 }
@@ -40,12 +39,6 @@ void PIT_Count(void)
         PIT_CH0_COUNTER++;
     
     PIC_ClearInt();
-    
-    if(PIT_CH0_SLEEP == PIT_CH0_COUNTER){
-        print(Terminal_B8000_8025_GetTerminalContext(), "A\r\n");
-        PIC_Disable();
-        PIT_CH0_ENABLE = 0;
-    }
 }
 
 void PIT_Sleep(uint64_t time)
@@ -60,4 +53,9 @@ void PIT_Sleep(uint64_t time)
     }
 
     while(PIT_CH0_COUNTER != PIT_CH0_SLEEP){}
+
+    if(PIT_CH0_SLEEP == PIT_CH0_COUNTER){
+        PIC_Disable();
+        PIT_CH0_ENABLE = 0;
+    }
 }
