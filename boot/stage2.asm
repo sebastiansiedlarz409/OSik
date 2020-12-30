@@ -126,7 +126,8 @@ loader:
 
     .ph_loop:
 
-    mov r8d, [rsi + 0x8]                                    ;size of segment
+    mov r8d, [rsi + 0x8]                                    ;size of segment in memory
+    mov r13d, [rsi + 0x10]                                  ;size of segment in file
     mov r9d, [rsi + 0xC]                                    ;vaddr where it should be copied
     add r9, r11                                             ;add 0x400000
     mov r10d, [rsi + 0x14]                                  ;section offset in file
@@ -144,7 +145,7 @@ loader:
     ;copy sections
     lea rsi, [0x10000 + kernel64 + r10d]                    ;what should be copied, remember to add offset in image
     mov rdi, r9                                             ;where it should be copied in memory
-    mov rcx, r8                                             ;how many bytes copy
+    mov rcx, r13                                            ;how many bytes copy
     rep movsb                                               ;execute copy
 
     ;restor registers
@@ -156,7 +157,7 @@ loader:
     loop .ph_loop
 
     ;place stack in memory
-    lea rsp, [0x3f0000]
+    lea rsp, [0x3ff000]
     
     ;args to _start
     ;page 10 -> https://www.agner.org/optimize/calling_conventions.pdf
