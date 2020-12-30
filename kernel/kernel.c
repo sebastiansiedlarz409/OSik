@@ -2,6 +2,7 @@
 #include "hal\hal.h"
 #include "common.h"
 #include "int\interrupt.h"
+#include "devices\pit.h"
 #include "terminal\terminal.h"
 #include "terminal\terminal_B8000_8025.h"
 
@@ -20,6 +21,8 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
 void _start(void* kernelEntryPointAddress, void* stackAddress){
     //set interrupts
     INT_SetIDTR();
+    
+    PIT_Sleep(3000);
 
     context = Terminal_B8000_8025_GetTerminalContext();
 

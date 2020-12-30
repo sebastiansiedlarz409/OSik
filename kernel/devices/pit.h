@@ -1,6 +1,8 @@
 #ifndef PIT_H
 #define PIT_H
 
+#include <stdint.h>
+
 //FREQ = 1.1931816666 MHz
 
 typedef enum _PIT_PORTS{
@@ -43,5 +45,6 @@ typedef enum _PIT_BCDMODE{
 void PIT_Init(void);
 void PIT_Reload(void);
 void PIT_Count(void);
+void PIT_Sleep(uint64_t time);
 
 #endif //PIT_H
