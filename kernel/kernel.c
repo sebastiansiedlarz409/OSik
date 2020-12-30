@@ -10,7 +10,8 @@
 
 TerminalContext* context;
 
-void _welcome(void* kernelEntryPointAddress, void* stackAddress){
+void _welcome(void* kernelEntryPointAddress, void* stackAddress)
+{
     uint64_t KEPAddr = (uint64_t)kernelEntryPointAddress;
     uint64_t SAddr = (uint64_t)stackAddress;
 
@@ -20,7 +21,8 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress){
     print(context, "[F1/F2/...] to style terminal\n\r");
 }
 
-void _start(void* kernelEntryPointAddress, void* stackAddress){
+void _start(void* kernelEntryPointAddress, void* stackAddress)
+{
     //set interrupts
     INT_SetIDTR();
     
@@ -32,10 +34,10 @@ void _start(void* kernelEntryPointAddress, void* stackAddress){
     _welcome(kernelEntryPointAddress, stackAddress);
 
     //test int 0
-    /*int a = 0, b = 0;
+    int a = 0, b = 0;
     __asm__ volatile("div %2\n"
        : "=d" (a), "=a" (b)
-       : "r" (a), "d" (a), "a" (a));*/
+       : "r" (a), "d" (a), "a" (a));
 
     for(;;);
 }

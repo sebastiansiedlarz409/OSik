@@ -9,15 +9,19 @@
 
 IDTE table[256];
 
+extern void DefaultError_Wrapper(void);
+
 extern void DivideError_Wrapper(void);
 extern void PITInt_Wrapper(void);
 extern void KeyboardInt_Wrapper(void);
 
-uint16_t INT_SetIDTEntryFlags(uint8_t ist, uint8_t type, uint8_t dpl, uint8_t p){
+uint16_t INT_SetIDTEntryFlags(uint8_t ist, uint8_t type, uint8_t dpl, uint8_t p)
+{
     return (uint16_t)(ist | (type << 8) | (dpl << 13) | (p << 15));
 }
 
-void INT_SetIDTEntry(IDTE* idte, uint64_t address, uint8_t ist, uint8_t type, uint8_t dpl, uint8_t p){
+void INT_SetIDTEntry(IDTE* idte, uint64_t address, uint8_t ist, uint8_t type, uint8_t dpl, uint8_t p)
+{
     idte->offset_63_32 = (address >> 32);
     idte->offset_31_16 = ((address & 0xFFFF0000) >> 16);
     idte->offset_15_0 = (address & 0xFFFF);
@@ -25,8 +29,16 @@ void INT_SetIDTEntry(IDTE* idte, uint64_t address, uint8_t ist, uint8_t type, ui
     idte->seg_selector = 0x8;
 }
 
-void INT_SetIDTR(void){
+void INT_SetIDTR(void)
+{
     INT_SetIDTEntry(&table[0], (uint64_t)DivideError_Wrapper, 0, 0xE, 0, 1);
+    INT_SetIDTEntry(&table[1], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
+    INT_SetIDTEntry(&table[2], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
+    INT_SetIDTEntry(&table[3], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
+    INT_SetIDTEntry(&table[4], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
+    INT_SetIDTEntry(&table[5], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
+    INT_SetIDTEntry(&table[6], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
+    INT_SetIDTEntry(&table[7], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
     INT_SetIDTEntry(&table[8], (uint64_t)PITInt_Wrapper, 0, 0xE, 0, 1); //pit
     INT_SetIDTEntry(&table[9], (uint64_t)KeyboardInt_Wrapper, 0, 0xE, 0, 1); //keyboard
 

@@ -13,6 +13,11 @@
 
 //https://wiki.osdev.org/Exceptions
 
+void DefaultError_Handler(void *trapFrame)
+{
+    BSOD("UNKNOW ERROR", trapFrame);
+}
+
 void DivideError_Handler(void *trapFrame)
 {
     BSOD("DIVIDE BY ZERO ERROR", trapFrame);

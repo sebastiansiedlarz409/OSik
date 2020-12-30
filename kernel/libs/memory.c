@@ -2,7 +2,8 @@
 
 #include <stdint.h>
 
-void* memmove(void* src, void* dst, size_t size){
+void* memmove(void* src, void* dst, size_t size)
+{
     if(src == dst)
         return dst;
 

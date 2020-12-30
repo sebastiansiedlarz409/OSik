@@ -18,12 +18,14 @@ static struct B8000_8025_Context B8000_8025_context = {
     .style = 0x02
 };
 
-static void B8000_8025_Style(TerminalContext* context, uint8_t style){
+static void B8000_8025_Style(TerminalContext* context, uint8_t style)
+{
     UNUSED(context);
     B8000_8025_context.style = style;
 }
 
-static void B8000_8025_Scp(TerminalContext* context, uint16_t x, uint16_t y){
+static void B8000_8025_Scp(TerminalContext* context, uint16_t x, uint16_t y)
+{
     UNUSED(context);
     //http://wiki.osdev.org/Text_Mode_Cursor#Moving_the_Cursor_with_the_BIOS
     uint32_t position = y * (LINE_WIDTH/2) + x;
@@ -37,7 +39,8 @@ static void B8000_8025_Scp(TerminalContext* context, uint16_t x, uint16_t y){
     B8000_8025_context.y = y;
 }
 
-static void B8000_8025_Scroll(TerminalContext* context){
+static void B8000_8025_Scroll(TerminalContext* context)
+{
     char *textVRAM = (char*)0xB8000;
 
     //copy memory
@@ -51,19 +54,22 @@ static void B8000_8025_Scroll(TerminalContext* context){
     B8000_8025_Scp(context, 0, LINE_COUNT-1);
 }
 
-static void B8000_8025_Gcp(TerminalContext* context, uint16_t* x, uint16_t* y){
+static void B8000_8025_Gcp(TerminalContext* context, uint16_t* x, uint16_t* y)
+{
     UNUSED(context);
     *x = B8000_8025_context.x;
     *y = B8000_8025_context.y;
 }
 
-static void B8000_8025_Gsize(TerminalContext* context, uint16_t* w, uint16_t* h){
+static void B8000_8025_Gsize(TerminalContext* context, uint16_t* w, uint16_t* h)
+{
     UNUSED(context);
     *w = LINE_WIDTH/2;
     *h = LINE_COUNT;
 }
 
-static void B8000_8025_Putchar(TerminalContext* context, char ch){
+static void B8000_8025_Putchar(TerminalContext* context, char ch)
+{
     char *textVRAM = (char*)0xB8000;
 
     uint16_t x = B8000_8025_context.x;
@@ -90,7 +96,8 @@ static void B8000_8025_Putchar(TerminalContext* context, char ch){
     B8000_8025_Scp(context, x,y);
 }
 
-static void B8000_8025_Removechar(TerminalContext* context){
+static void B8000_8025_Removechar(TerminalContext* context)
+{
     char *textVRAM = (char*)0xB8000;
 
     uint16_t x = B8000_8025_context.x;
@@ -115,7 +122,8 @@ static void B8000_8025_Removechar(TerminalContext* context){
     textVRAM[position*2+1] = B8000_8025_context.style;
 }
 
-static void B8000_8025_Cls(TerminalContext* context){
+static void B8000_8025_Cls(TerminalContext* context)
+{
     //write whole buffer with value 0x0002
     char *textVRAM = (char*)0xB8000;
     for(int i = 0;i<LINE_WIDTH*LINE_COUNT;i+=2){
@@ -137,6 +145,7 @@ static const TerminalContext context = {
     ._style = B8000_8025_Style
 };
 
-TerminalContext* Terminal_B8000_8025_GetTerminalContext(void){
+TerminalContext* Terminal_B8000_8025_GetTerminalContext(void)
+{
     return (TerminalContext*)&context;
 }

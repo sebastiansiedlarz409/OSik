@@ -5,7 +5,8 @@
 
 TerminalContext* context;
 
-void BSOD(const char* reason, void* frame){
+void BSOD(const char* reason, void* frame)
+{
     context = Terminal_B8000_8025_GetTerminalContext();
 
     uint64_t* frameBuffer = (uint64_t*)frame;
@@ -31,26 +32,24 @@ void BSOD(const char* reason, void* frame){
 
     T_StyleTerminal(context, 0x17);
     T_ClearTerminal(context);
-    print(context, "%s\n\r", reason);
-    print(context, "R15 -> %x\r\n", r15);
-    print(context, "R14 -> %x\r\n", r14);
-    print(context, "R13 -> %x\r\n", r13);
-    print(context, "R12 -> %x\r\n", r12);
-    print(context, "R11 -> %x\r\n", r11);
-    print(context, "R10 -> %x\r\n", r10);
-    print(context, "R9  -> %x\r\n", r9);
-    print(context, "R8  -> %x\r\n", r8);
-    print(context, "RBP -> %x\r\n", rbp);
-    print(context, "RDI -> %x\r\n", rdi);
-    print(context, "RSI -> %x\r\n", rsi);
-    print(context, "RDX -> %x\r\n", rdx);
-    print(context, "RCX -> %x\r\n", rcx);
-    print(context, "RBX -> %x\r\n", rbx);
-    print(context, "RAX -> %x\r\n", rax);
-    print(context, "RSP -> %x\r\n", rsp);
+
+    print(context, "!!!I have died!!!\r\n\r\n");
+
+    print(context, "%s\n\r\r\n", reason);
+    
+    print(context, "R15 -> %x \t RBP -> %x\r\n", r15, rbp);
+    print(context, "R14 -> %x \t RDI -> %x\r\n", r14, rdi);
+    print(context, "R13 -> %x \t RSI -> %x\r\n", r13, rsi);
+    print(context, "R12 -> %x \t RDX -> %x\r\n", r12, rdx);
+    print(context, "R11 -> %x \t RCX -> %x\r\n", r11, rcx);
+    print(context, "R10 -> %x \t RBX -> %x\r\n", r10, rbx);
+    print(context, "R9  -> %x \t RAX -> %x\r\n", r9, rax);
+    print(context, "R8  -> %x \t RSP -> %x\r\n", r8, rsp);
     print(context, "RIP -> %x\r\n\r\n", rip);
 
-    print(context, "EFLAGS -> %x\r\n", eflags);
+    print(context, "EFLAGS -> %x %d%d%d%d%d%d%d%d\r\n", eflags,
+     (eflags&128) >> 7, (eflags&64) >> 6 ,(eflags&32) >> 5,(eflags&16) >> 4,
+     (eflags&8) >> 3,(eflags&4) >> 2,(eflags&2) >> 1,(eflags&1));
 
     for(;;);
 }

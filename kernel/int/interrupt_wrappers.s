@@ -1,5 +1,9 @@
 .file "int_wrappers.s"
 .intel_syntax noprefix
+
+.global DefaultError_Wrapper
+.extern DefaultError_Handler
+
 .global DivideError_Wrapper
 .extern DivideError_Handler
 .global KeyboardInt_Wrapper
@@ -48,6 +52,13 @@
   add rsp, 8
   popfq
 .endm
+
+DefaultError_Wrapper:
+  PUSHA  
+  mov rcx, rsp
+  call DefaultError_Handler
+  POPA
+  iretq
 
 DivideError_Wrapper:
   PUSHA  
