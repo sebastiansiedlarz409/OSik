@@ -19,7 +19,7 @@ void LOGO_ShowLogo(void)
     print(context, "#      #   ####       #   ###                   \r\n");
     print(context, "#      #       ####   #   ###                   \r\n");
     print(context, "#      #          #   #   #  ##                 \r\n");
-    print(context, "########   ########   #   #    ##               \r\n\r\n");
+    print(context, "########   ########   #   #    ##               SS\r\n\r\n");
 
     T_StyleTerminal(context, 0x02);
 
@@ -40,7 +40,7 @@ void LOGO_ShowDieLogo(void)
     print(context, "#      #   ####       #   ###             #########################          \r\n");
     print(context, "#      #       ####   #   ###            #                #    #   #          \r\n");
     print(context, "#      #          #   #   #  ##                           #    #             \r\n");
-    print(context, "########   ########   #   #    ##                          ####              \r\n\r\n");
+    print(context, "########   ########   #   #    ##                          ####              SS\r\n\r\n");
 
     T_StyleTerminal(context, 0x17);
 

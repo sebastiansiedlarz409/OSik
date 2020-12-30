@@ -13,30 +13,30 @@ gcc_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -mgeneral-regs-only -c
 ld_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -s -ggdb -o kernel\kernel64"
 asm_flags = "-masm=intel -c"
 
-dirs = [d for d in os.listdir("kernel") if os.path.isdir(os.path.join("kernel", d))]
+dirs = [d for d in os.listdir("system") if os.path.isdir(os.path.join("system", d))]
 
 #compile *.c
 for d in dirs:
-    for fname in glob(f"kernel\{d}\*.c"):
+    for fname in glob(f"system\{d}\*.c"):
         binary = f"{fname.split('.')[0]}.o"
         obj_files.append(binary)
         obj_cmds.append([f"gcc {fname} {gcc_flags} -o {binary}"])
 
 #compile *.s
 for d in dirs:
-    for fname in glob(f"kernel\{d}\*.s"):
+    for fname in glob(f"system\{d}\*.s"):
         binary = f"{fname.split('.')[0]}.obj"
         obj_files.append(binary)
         obj_cmds.append([f"gcc {fname} {asm_flags} -o {binary}"])
 
 # compile *.c in main kernel directory
-for fname in glob("kernel\*.c"):
+for fname in glob("system\*.c"):
     binary = f"{fname.split('.')[0]}.o"
     obj_files.append(binary)
     obj_cmds.append([f"gcc {fname} {gcc_flags} -o {binary}"])
 
 # compile *.s in main kernel directory
-for fname in glob("kernel\*.s"):
+for fname in glob("system\*.s"):
     binary = f"{fname.split('.')[0]}.obj"
     obj_files.append(binary)
     obj_cmds.append([f"gcc {fname} {asm_flags} -o {binary}"])
@@ -52,7 +52,7 @@ for cmd in obj_cmds:
 cmds = [
     ["nasm boot\stage1.asm", "boot\stage1"],
     ["nasm boot\stage2.asm", "boot\stage2"],
-    [f"gcc {(' '.join(obj_files))} {ld_flags} --entry=_start -o kernel\kernel64", "kernel\kernel64.exe"],
+    [f"gcc {(' '.join(obj_files))} {ld_flags} --entry=_start -o system\kernel", "system\kernel.exe"],
 ]
 
 for cmd in cmds:
