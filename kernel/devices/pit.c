@@ -38,7 +38,9 @@ void PIT_Count(void)
 {
     if(PIT_CH0_COUNTER < UINT64_MAX)
         PIT_CH0_COUNTER++;
-
+    
+    PIC_ClearInt();
+    
     if(PIT_CH0_SLEEP == PIT_CH0_COUNTER){
         print(Terminal_B8000_8025_GetTerminalContext(), "A\r\n");
         PIC_Disable();
@@ -56,4 +58,6 @@ void PIT_Sleep(uint64_t time)
     else{
         PIT_Init();
     }
+
+    while(PIT_CH0_COUNTER != PIT_CH0_SLEEP){}
 }

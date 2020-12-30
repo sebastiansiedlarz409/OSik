@@ -29,6 +29,4 @@ void PITInt_Handler(void* trapFrame)
 {
     UNUSED(trapFrame);
     PIT_Count();
-    PIT_Reload();
-    PIC_ClearInt();
 }
