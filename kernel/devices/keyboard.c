@@ -1,5 +1,4 @@
 #include "../hal/hal.h"
-#include "../int/pic.h"
 #include "keyboard.h"
 #include "../terminal/terminal.h"
 #include "../terminal/terminal_B8000_8025.h"
@@ -172,6 +171,4 @@ void KB_Interrupt(void)
     HAL_PortInByte(0x60, &scanCode);
 
     KB_Print(scanCode);
-
-    PIC_ClearInt();
 }

@@ -24,8 +24,6 @@ typedef struct _IDTE IDTE;
 //0xE - interrupt gate - hardware int, disable further int
 //0x6 - trap gate - software int, hardware int are still one
 
-IDTE table[256];
-
 struct _IDTP{
     uint16_t limit;
     uint64_t address;

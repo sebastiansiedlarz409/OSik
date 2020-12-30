@@ -1,8 +1,12 @@
 #include "pic.h"
 #include "interrupt.h"
 #include "interrupt_handlers.h"
+#include "../terminal/terminal.h"
+#include "../terminal/terminal_B8000_8025.h"
 
 #include <stdint.h>
+
+IDTE table[256];
 
 extern void DivideError_Wrapper(void);
 extern void KeyboardInt_Wrapper(void);
@@ -21,7 +25,7 @@ void INT_SetIDTEntry(IDTE* idte, uint64_t address, uint8_t ist, uint8_t type, ui
 
 void INT_SetIDTR(void){
     INT_SetIDTEntry(&table[0], (uint64_t)DivideError_Wrapper, 0, 0xE, 0, 1);
-    INT_SetIDTEntry(&table[9], (uint64_t)KeyboardInt_Wrapper, 0, 0xE, 0, 1); //keyboard
+    INT_SetIDTEntry(&table[13], (uint64_t)KeyboardInt_Wrapper, 0, 0xE, 0, 1); //keyboard
 
     //INTEL 3A, page 200
     IDTP idtp = {

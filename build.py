@@ -9,8 +9,8 @@ obj_cmds = []
 
 obj_files = []
 
-gcc_flags = "-std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -mgeneral-regs-only -c -ggdb"
-ld_flags = "-std=c99 -nostdlib -masm=intel -O3 -Wall -Wextra -s -ggdb -o kernel\kernel64"
+gcc_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -mgeneral-regs-only -c -ggdb"
+ld_flags = "-std=c99 -nostdlib -masm=intel -Wall -Wextra -s -ggdb -o kernel\kernel64"
 asm_flags = "-masm=intel -c"
 
 dirs = [d for d in os.listdir("kernel") if os.path.isdir(os.path.join("kernel", d))]
