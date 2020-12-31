@@ -96,7 +96,7 @@ void T_PrintfUInt(TerminalContext* context, size_t ch)
     }
 
     char buf[24] = {0};
-    char *p = &buf[24];
+    char *p = &buf[23];
     while (ch != 0) {
         --p;
         *p = (ch % 10) + '0';

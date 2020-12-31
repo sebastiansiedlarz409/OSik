@@ -18,6 +18,8 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress)
 
     LOGO_ShowLogo();
 
+    print(context, "%d\r\n", 1522222);
+
     print(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
     print(context, "Stack pointer at 0x%x\n\r", SAddr);
     print(context, "[ESC] to clear screen\n\r");
