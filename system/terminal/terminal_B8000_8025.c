@@ -46,7 +46,7 @@ static void B8000_8025_Scroll(TerminalContext* context)
     char *textVRAM = (char*)0xB8000;
 
     //copy memory
-    memmove(textVRAM+LINE_WIDTH, textVRAM, LINE_COUNT*LINE_WIDTH-LINE_WIDTH);
+    MM_Mmove(textVRAM+LINE_WIDTH, textVRAM, LINE_COUNT*LINE_WIDTH-LINE_WIDTH);
 
     for(int i = LINE_COUNT*LINE_WIDTH-LINE_WIDTH;i<LINE_COUNT*LINE_WIDTH;i+=2){
         textVRAM[i] = 0x00;

@@ -4,6 +4,7 @@
 #include "common.h"
 #include "int\interrupt.h"
 #include "devices\pit.h"
+#include "libs\memory.h"
 #include "terminal\terminal.h"
 #include "terminal\terminal_B8000_8025.h"
 
@@ -18,7 +19,11 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress)
 
     LOGO_ShowLogo();
 
-    print(context, "%d\r\n", 1522222);
+    void* p1 = MM_Malloc(20);
+    void* p2 = MM_Malloc(10);
+
+    print(context, "%x\r\n", (long long)p1);
+    print(context, "%x\r\n", (long long)p2);
 
     print(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
     print(context, "Stack pointer at 0x%x\n\r", SAddr);
