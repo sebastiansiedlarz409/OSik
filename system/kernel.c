@@ -12,23 +12,22 @@
 
 TerminalContext* context;
 
-void _welcome(void* kernelEntryPointAddress, void* stackAddress)
+void KERN_Welcome(void* kernelEntryPointAddress, void* stackAddress)
 {
     uint64_t KEPAddr = (uint64_t)kernelEntryPointAddress;
     uint64_t SAddr = (uint64_t)stackAddress;
 
     LOGO_ShowLogo();
 
-    void* p1 = HEAP_Malloc(20);
-    void* p2 = HEAP_Malloc(20);
-    HEAP_Free(p2);
-    void* p3 = HEAP_Malloc(20);
+    //void* p1 = HEAP_Malloc(20);
+    //void* p2 = HEAP_Malloc(20);
     //HEAP_Free(p2);
+    //void* p3 = HEAP_Malloc(20);
     //void* p4 = HEAP_Malloc(5);
 
-    print(context, "%x\r\n", (long long)p1);
-    print(context, "%x\r\n", (long long)p2);
-    print(context, "%x\r\n", (long long)p3);
+    //print(context, "%x\r\n", (long long)p1);
+    //print(context, "%x\r\n", (long long)p2);
+    //print(context, "%x\r\n", (long long)p3);
     //print(context, "%x\r\n", (long long)p4);
 
     print(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
@@ -41,7 +40,7 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress)
     print(context, "%c", terminalChar);
 }
 
-void _start(void* kernelEntryPointAddress, void* stackAddress)
+void KERN_Start(void* kernelEntryPointAddress, void* stackAddress)
 {
     //set interrupts
     INT_SetIDTR();
@@ -55,7 +54,7 @@ void _start(void* kernelEntryPointAddress, void* stackAddress)
     context = Terminal_B8000_8025_GetTerminalContext();
 
     T_ClearTerminal(context);
-    _welcome(kernelEntryPointAddress, stackAddress);
+    KERN_Welcome(kernelEntryPointAddress, stackAddress);
 
     //test int 0
     /*int a = 0, b = 0;
