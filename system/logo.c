@@ -12,16 +12,16 @@ void LOGO_ShowLogo(void)
 
     T_SetCursorPosition(context, 0, 0);
 
-    print(context, "########                  #                     \r\n");
-    print(context, "#      #                  #                     \r\n");
-    print(context, "#      #              #   #                     \r\n");
-    print(context, "#      #                  #                     \r\n");
-    print(context, "#      #   ########   #   #    ##               \r\n");
-    print(context, "#      #   #          #   #  ##                 \r\n");
-    print(context, "#      #   ####       #   ###                   \r\n");
-    print(context, "#      #       ####   #   ###                   \r\n");
-    print(context, "#      #          #   #   #  ##                 \r\n");
-    print(context, "########   ########   #   #    ##               SS\r\n\r\n");
+    print(context, "#########                    ##                     \r\n");
+    print(context, "#      ##                    ##                     \r\n");
+    print(context, "#      ##               ##   ##                     \r\n");
+    print(context, "#      ##                    ##                     \r\n");
+    print(context, "#      ##   #########   ##   ##    ###              \r\n");
+    print(context, "#      ##   #           ##   ##  ##                 \r\n");
+    print(context, "#      ##   ####        ##   ###                    \r\n");
+    print(context, "#      ##       #####   ##   ###                    \r\n");
+    print(context, "#      ##          ##   ##   ##  ##                 \r\n");
+    print(context, "#########   #########   ##   ##    ###           SS\r\n\r\n");
 
     T_StyleTerminal(context, 0x02);
 
@@ -33,16 +33,18 @@ void LOGO_ShowDieLogo(void)
 
     T_StyleTerminal(context, 0x14);
 
-    print(context, "########                  #               #        #     #        #          \r\n");
-    print(context, "#      #                  #                 #    #         #    #            \r\n");
-    print(context, "#      #              #   #                    #              #              \r\n");
-    print(context, "#      #                  #                  #   #          #   #            \r\n");
-    print(context, "#      #   ########   #   #    ##         #        #     #        #          \r\n");
-    print(context, "#      #   #          #   #  ##                                              \r\n");
-    print(context, "#      #   ####       #   ###             #########################          \r\n");
-    print(context, "#      #       ####   #   ###            #                #    #   #          \r\n");
-    print(context, "#      #          #   #   #  ##                           #    #             \r\n");
-    print(context, "########   ########   #   #    ##                          ####              SS\r\n\r\n");
+    T_SetCursorPosition(context, 0, 0);
+
+    print(context, "#########                    ##             #       #     #       #         \r\n");
+    print(context, "#      ##                    ##               #   #         #   #           \r\n");
+    print(context, "#      ##               ##   ##                 #             #             \r\n");
+    print(context, "#      ##                    ##                #  #          #  #           \r\n");
+    print(context, "#      ##   #########   ##   ##    ###       #      #     #       #         \r\n");
+    print(context, "#      ##   #           ##   ##  ##                                         \r\n");
+    print(context, "#      ##   ####        ##   ###           #########################        \r\n");
+    print(context, "#      ##       #####   ##   ###          #                #      #  #      \r\n");
+    print(context, "#      ##          ##   ##   ##  ##                         #    #          \r\n");
+    print(context, "#########   #########   ##   ##    ###                        ####          SS\r\n\r\n");
 
     T_StyleTerminal(context, 0x17);
 

@@ -57,10 +57,10 @@ void KERN_Start(void* kernelEntryPointAddress, void* stackAddress)
     KERN_Welcome(kernelEntryPointAddress, stackAddress);
 
     //test int 0
-    /*int a = 0, b = 0;
+    int a = 0, b = 0;
     __asm__ volatile("div %2\n"
        : "=d" (a), "=a" (b)
-       : "r" (a), "d" (a), "a" (a));*/
+       : "r" (a), "d" (a), "a" (a));
 
     for(;;);
 }
