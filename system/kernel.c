@@ -18,16 +18,16 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress)
     uint64_t SAddr = (uint64_t)stackAddress;
 
     LOGO_ShowLogo();
-    
+
     void* p1 = HEAP_Malloc(20);
     void* p2 = HEAP_Malloc(10);
-    //void* p3 = HEAP_Malloc(20);
+    void* p3 = HEAP_Malloc(20);
     //HEAP_Free(p2);
     //void* p4 = HEAP_Malloc(5);
 
     print(context, "%x\r\n", (long long)p1);
     print(context, "%x\r\n", (long long)p2);
-    //print(context, "%x\r\n", (long long)p3);
+    print(context, "%x\r\n", (long long)p3);
     //print(context, "%x\r\n", (long long)p4);
 
     print(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
@@ -46,7 +46,7 @@ void _start(void* kernelEntryPointAddress, void* stackAddress)
     INT_SetIDTR();
     
     //init heap
-    HEAP_Init(0x500000, 0x100000);
+    HEAP_Init(0x500000, 50);
 
     //PIT sleep
     PIT_Sleep(2000);

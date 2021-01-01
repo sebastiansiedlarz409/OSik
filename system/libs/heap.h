@@ -23,6 +23,6 @@ MemorySegment* CUR_FREE_SEG;
 
 void HEAP_Init(uint64_t address, uint64_t size);
 void* HEAP_Malloc(uint64_t size);
-void* HEAP_Free(void);
+void HEAP_Free(void* ptr);
 
 #endif //HEAP_H
