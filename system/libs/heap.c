@@ -25,34 +25,37 @@ void* HEAP_Malloc(uint64_t n)
 {
     n += n % 8;
 
-    if(CUR_FREE_SEG->size > n){
+    MemorySegment* CURRENT = CUR_FREE_SEG;
+
+    if(CURRENT->size > n){
         //if there is space to new segment
-        if(CUR_FREE_SEG->size >= sizeof(MemorySegment) + n){
+        if(CURRENT->size >= sizeof(MemorySegment) + n){
             /*
             * |     |           |                          |
             * | CFS |     N     | NEWSEG and rest of space |
             * |     |           |                          |
             */
-            MemorySegment* newSegment = (MemorySegment*)((uint64_t)CUR_FREE_SEG + sizeof(MemorySegment) + n);
+            MemorySegment* newSegment = (MemorySegment*)((uint64_t)CURRENT + sizeof(MemorySegment) + n);
 
             //new segment size is equal current size - sizeof allocated memory
             newSegment->size = CUR_FREE_SEG->size - n;
 
-            CUR_FREE_SEG->next = newSegment;
-            CUR_FREE_SEG->nextFree = newSegment;
-            CUR_FREE_SEG->size = n;
-            CUR_FREE_SEG->free = NOT_FREE;
+            CURRENT->next = newSegment;
+            CURRENT->nextFree = newSegment;
+            CURRENT->size = n;
+            CURRENT->free = NOT_FREE;
 
-            newSegment->prev = CUR_FREE_SEG;
-            newSegment->prevFree = CUR_FREE_SEG->prevFree;
-            newSegment->next = CUR_FREE_SEG->next;
-            newSegment->nextFree = CUR_FREE_SEG->nextFree;
+            newSegment->prev = CURRENT;
+            newSegment->prevFree = CURRENT->prevFree;
+            newSegment->next = CURRENT->next;
+            newSegment->nextFree = CURRENT->nextFree;
             newSegment->free = FREE;
         }
         
-        CUR_FREE_SEG = CUR_FREE_SEG->nextFree;
+        CURRENT = CURRENT->nextFree;
+        CUR_FREE_SEG = CURRENT;
 
-        return (void*)CUR_FREE_SEG->prev;
+        return (void*)CURRENT->prev;
     }
     else{
         //there is no more free space
@@ -60,10 +63,60 @@ void* HEAP_Malloc(uint64_t n)
     }
 }
 
-void HEAP_Free(void* ptr){
-    MemorySegment* CURRENT = (MemorySegment*)ptr;
+void HEAP_Concat(MemorySegment* a, MemorySegment* b)
+{
+    if (a == 0 || b == 0)
+        return;
+
+    if(a < b){
+        a->size += b->size + sizeof(MemorySegment);
+        a->next = b->next;
+        a->nextFree = b->nextFree;
+        b->next->prev = a;
+        b->next->prevFree = a;
+        b->nextFree->prevFree = a;
+    }
+    else{
+        b->size += a->size + sizeof(MemorySegment);
+        b->next = a->next;
+        b->nextFree = a->nextFree;
+        a->next->prev = b;
+        a->next->prevFree = b;
+        a->nextFree->prevFree = b;
+    }
+}
+
+void HEAP_Free(void* ptr)
+{
+    MemorySegment* CURRENT = ((MemorySegment*)ptr);
 
     CURRENT->free = FREE;
 
-       
+    if(CURRENT < CUR_FREE_SEG){
+        CUR_FREE_SEG = CURRENT;
+    }
+
+    if(CURRENT->nextFree != 0){
+        if(CURRENT->nextFree->prevFree < CURRENT){
+            CURRENT->nextFree->prevFree = CURRENT;
+        }
+    }
+
+    if(CURRENT->prevFree != 0){
+        if(CURRENT->prevFree->nextFree > CURRENT){
+            CURRENT->prevFree->nextFree = CURRENT;
+        }
+    }
+
+    if(CURRENT->next != 0){
+        CURRENT->next->prev = CURRENT;
+        if(CURRENT->next->free)
+            HEAP_Concat(CURRENT, CURRENT->next);
+    }
+
+    if(CURRENT->prev != 0){
+        CURRENT->prev->next = CURRENT;
+        if(CURRENT->prev->free)
+            HEAP_Concat(CURRENT, CURRENT->prev);
+    }
 }
