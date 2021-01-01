@@ -5,26 +5,24 @@
 
 typedef struct _MemorySegment MemorySegment;
 
-enum MEM_USAGE{
-    USED = 0x1,
-    NOT_USED = 0x0
-};
-
 struct _MemorySegment{
-    uint64_t address;
     uint64_t size;
     uint8_t free;
     MemorySegment* prev;
     MemorySegment* next;
+    MemorySegment* prevFree;
+    MemorySegment* nextFree;
 };
 
-MemorySegment FIRST_SEG;
+enum MEM_USAGE{
+    FREE = 0x1,
+    NOT_FREE = 0x0
+};
 
-void HEAP_Init(MemorySegment* seg);
-void HEAP_InsertAfter(MemorySegment* seg, MemorySegment* newSeg);
-void HEAP_InsertBefore(MemorySegment* seg, MemorySegment* newSeg);
-void HEAP_PushBack(MemorySegment* seg, MemorySegment* newSeg);
-void HEAP_PopBack(MemorySegment* seg);
-void HEAP_Remove(MemorySegment* seg);
+MemorySegment* CUR_FREE_SEG;
+
+void HEAP_Init(uint64_t address, uint64_t size);
+void* HEAP_Malloc(uint64_t size);
+void* HEAP_Free(void);
 
 #endif //HEAP_H

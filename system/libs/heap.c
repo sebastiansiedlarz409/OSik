@@ -1,62 +1,51 @@
 #include "heap.h"
+#include "../terminal/terminal.h"
+#include "../terminal/terminal_B8000_8025.h"
 
-MemorySegment FIRST_SEG = {
-    .address = 0x500000,
-    .size = 0,
-    .free = NOT_USED,
-    .next = &FIRST_SEG,
-    .prev = &FIRST_SEG
-};
+#include <stdint.h>
 
 //init node
-void HEAP_Init(MemorySegment* seg)
+void HEAP_Init(uint64_t address, uint64_t size)
 {
-    seg->next = seg;
-    seg->prev = seg;
-    seg->free = NOT_USED;
-    seg->size = 0;
-    seg->address = (uint64_t)seg;
+    CUR_FREE_SEG = (MemorySegment*)address;
+    CUR_FREE_SEG->free = FREE;
+    CUR_FREE_SEG->next = 0;
+    CUR_FREE_SEG->prev = 0;
+    CUR_FREE_SEG->nextFree = 0;
+    CUR_FREE_SEG->prevFree = 0;
+    CUR_FREE_SEG->size = size - sizeof(MemorySegment); //space we want - size of this structure
 }
 
-void HEAP_InsertAfter(MemorySegment* seg, MemorySegment* newSeg)
+void* HEAP_Malloc(uint64_t n)
 {
-    MemorySegment* seg_next = seg->next;
-    MemorySegment* newSeg_prev = newSeg->prev; 
+    //   n += n % 8;
 
-    seg->next = newSeg;
-    newSeg->prev = seg;
+    if(CUR_FREE_SEG->size >= n){
+        /*
+        * |     |           |                          |
+        * | CFS |     N     | NEWSEG and rest of space |
+        * |     |           |                          |
+        */
+        MemorySegment* newSegment = (MemorySegment*)((uint64_t)CUR_FREE_SEG + sizeof(MemorySegment) + n);
+        newSegment->size = CUR_FREE_SEG->size - (n + sizeof(CUR_FREE_SEG));
 
-    newSeg->next = seg_next;
-    seg_next->prev = newSeg_prev;
-}
+        CUR_FREE_SEG->next = newSegment;
+        CUR_FREE_SEG->nextFree = newSegment;
+        CUR_FREE_SEG->size = n;
+        CUR_FREE_SEG->free = NOT_FREE;
 
-void HEAP_InsertBefore(MemorySegment* seg, MemorySegment* newSeg)
-{
-    MemorySegment* seg_prev = seg->prev;
-    MemorySegment* newSeg_next = newSeg->next;
+        newSegment->prev = CUR_FREE_SEG;
+        newSegment->prevFree = CUR_FREE_SEG->prevFree;
+        newSegment->next = CUR_FREE_SEG->next;
+        newSegment->nextFree = CUR_FREE_SEG->nextFree;
+        newSegment->free = FREE;
 
-    seg->prev = newSeg;
-    newSeg->next = seg;
+        CUR_FREE_SEG = newSegment;
 
-    seg_prev->next = newSeg_next;
-    newSeg->prev = seg_prev;
-}
-
-void HEAP_PushBack(MemorySegment* seg, MemorySegment* newSeg)
-{
-    HEAP_InsertAfter(seg, newSeg);
-}
-
-void HEAP_PopBack(MemorySegment* seg)
-{
-    seg->prev->next = seg->prev;
-}
-
-void HEAP_Remove(MemorySegment* seg)
-{
-    MemorySegment* seg_prev = seg->prev;
-    MemorySegment* seg_next = seg->next;
-
-    seg_next->prev = seg_prev;
-    seg_prev->next = seg_next;
+        return (void*)newSegment->prev;
+    }
+    else{
+        //there is no more free space
+        return 0;
+    }
 }

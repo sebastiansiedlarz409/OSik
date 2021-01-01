@@ -4,7 +4,7 @@
 #include "common.h"
 #include "int\interrupt.h"
 #include "devices\pit.h"
-#include "libs\memory.h"
+#include "libs\heap.h"
 #include "terminal\terminal.h"
 #include "terminal\terminal_B8000_8025.h"
 
@@ -18,12 +18,17 @@ void _welcome(void* kernelEntryPointAddress, void* stackAddress)
     uint64_t SAddr = (uint64_t)stackAddress;
 
     LOGO_ShowLogo();
-
-    void* p1 = MM_Malloc(20);
-    void* p2 = MM_Malloc(10);
+    
+    void* p1 = HEAP_Malloc(20);
+    void* p2 = HEAP_Malloc(10);
+    //void* p3 = HEAP_Malloc(20);
+    //HEAP_Free(p2);
+    //void* p4 = HEAP_Malloc(5);
 
     print(context, "%x\r\n", (long long)p1);
     print(context, "%x\r\n", (long long)p2);
+    //print(context, "%x\r\n", (long long)p3);
+    //print(context, "%x\r\n", (long long)p4);
 
     print(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
     print(context, "Stack pointer at 0x%x\n\r", SAddr);
@@ -40,7 +45,11 @@ void _start(void* kernelEntryPointAddress, void* stackAddress)
     //set interrupts
     INT_SetIDTR();
     
-    PIT_Sleep(5000);
+    //init heap
+    HEAP_Init(0x500000, 0x100000);
+
+    //PIT sleep
+    PIT_Sleep(2000);
 
     context = Terminal_B8000_8025_GetTerminalContext();
 

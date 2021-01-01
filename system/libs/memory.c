@@ -1,6 +1,8 @@
 #include "../common.h"
 #include "memory.h"
 #include "heap.h"
+#include "../terminal/terminal.h"
+#include "../terminal/terminal_B8000_8025.h"
 
 #include <stdint.h>
 
@@ -25,34 +27,4 @@ void* MM_Mmove(void* src, void* dst, size_t size)
         }
     }
     return dst;
-}
-
-void* MM_Malloc(size_t n)
-{
-    MemorySegment* current = &FIRST_SEG;
-    uint64_t offset = current->address;
-    while(1){
-        if(current->free == USED){
-            
-            MemorySegment new;
-            HEAP_Init(&new);
-                
-            offset+=current->size;
-            new.address = offset;
-            
-            HEAP_InsertAfter(current, &new);
-            
-            current = current->next;
-            continue;
-        
-        }
-        else{
-            current->size = n;
-            current->free = USED;
-            break;
-        }
-
-    }
-
-    return (void*)current->address;
 }
