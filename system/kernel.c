@@ -32,7 +32,8 @@ void KERN_Welcome(void* kernelEntryPointAddress, void* stackAddress)
 
     print(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
     print(context, "Stack pointer at 0x%x\n\r", SAddr);
-    print(context, "[ESC] to clear screen\n\r");
+    print(context, "[ESC] command/text mode\n\r");
+    print(context, "[DEL] to clear screen\n\r");
     print(context, "[F1/F2/...] to style terminal\n\r");
 
     T_StyleTerminal(context, 0x0F);
