@@ -37,6 +37,7 @@ void T_PrintfHex(TerminalContext *context, size_t ch, uint32_t width);
 void T_StyleTerminal(TerminalContext *context, uint8_t style);
 void T_NewLine(TerminalContext* context);
 void T_RemoveChar(TerminalContext *context);
+void T_TMode(TerminalContext* context);
 void print(TerminalContext* context, const char *formatString, ...);
 
 #endif //TERMINAL_H

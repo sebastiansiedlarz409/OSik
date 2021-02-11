@@ -81,6 +81,11 @@ void KB_Print(uint8_t scanCode)
     if(kb_context.counter == 0){
 
         if(scanCode == 0x01 || scanCode == 0x81){ //esc
+            T_TMode(context);
+            print(context, "Toggle mode");
+            T_NewLine(context);
+        }
+        else if(scanCode == 0xE0 || scanCode == 0x53){
             T_ClearTerminal(context);
         }
         else if(scanCode == 0x2A || scanCode == 0x36 || scanCode == 0xAA || scanCode == 0xB6){ //shift

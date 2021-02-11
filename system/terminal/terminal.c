@@ -231,3 +231,7 @@ void T_RemoveChar(TerminalContext *context)
         context->_removechar(context);
     }
 }
+
+void T_TMode(TerminalContext* context){
+    context->_tmode(context);
+}
