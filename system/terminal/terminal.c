@@ -218,5 +218,16 @@ void T_NewLine(TerminalContext* context)
 
 void T_RemoveChar(TerminalContext *context)
 {
-    context->_removechar(context);
+    if(context->_gmode(context) == COMMAND){
+        //skip $
+        uint16_t x = 0;
+        uint16_t y = 0;
+        T_GetCursorPosition(context, &x, &y);
+        if(x != 1){
+            context->_removechar(context);               
+        }
+    }
+    else{
+        context->_removechar(context);
+    }
 }
