@@ -235,3 +235,11 @@ void T_RemoveChar(TerminalContext *context)
 void T_TMode(TerminalContext* context){
     context->_tmode(context);
 }
+
+uint8_t T_GMode(TerminalContext* context){
+    return context->_gmode(context);
+}
+
+uint8_t T_GetChar(TerminalContext* context){
+    return context->_getchar(context);
+}

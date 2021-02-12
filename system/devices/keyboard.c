@@ -1,4 +1,5 @@
 #include "../hal/hal.h"
+#include "../terminal/cli.h"
 #include "keyboard.h"
 #include "../terminal/terminal.h"
 #include "../terminal/terminal_B8000_8025.h"
@@ -97,7 +98,16 @@ void KB_Print(uint8_t scanCode)
             }
         }
         else if(scanCode == 0x1C || scanCode == 0x9C){ //enter
-            T_NewLine(context);
+            uint8_t mode = T_GMode(context);
+            if (mode == DATA){            
+                T_NewLine(context);
+            }
+            else{
+                T_TMode(context);
+                CLI_Execute(context);
+                T_TMode(context);
+                T_NewLine(context);
+            }
         }
         else if(scanCode == 0xE || scanCode == 0x8E){ //backspace
             T_RemoveChar(context);

@@ -70,6 +70,20 @@ static void B8000_8025_Gsize(TerminalContext* context, uint16_t* w, uint16_t* h)
     *h = LINE_COUNT;
 }
 
+static uint8_t B8000_8025_Getchar(TerminalContext* context)
+{
+    UNUSED(context);
+    
+    char *textVRAM = (char*)0xB8000;
+
+    uint16_t x = B8000_8025_context.x;
+    uint16_t y = B8000_8025_context.y;
+
+    uint32_t position = y * (LINE_WIDTH/2) + x;
+
+    return (uint8_t)textVRAM[position*2];
+}
+
 static void B8000_8025_Putchar(TerminalContext* context, char ch)
 {
     char *textVRAM = (char*)0xB8000;
@@ -153,6 +167,7 @@ static const TerminalContext context = {
     ._scp = B8000_8025_Scp,
     ._gcp = B8000_8025_Gcp,
     ._clear = B8000_8025_Cls,
+    ._getchar = B8000_8025_Getchar,
     ._putchar = B8000_8025_Putchar,
     ._removechar = B8000_8025_Removechar,
     ._gsize = B8000_8025_Gsize,
