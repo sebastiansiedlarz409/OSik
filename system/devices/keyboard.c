@@ -1,8 +1,8 @@
-#include "../hal/hal.h"
-#include "../terminal/cli.h"
+#include "..\hal\hal.h"
+#include "..\cli\cli.h"
 #include "keyboard.h"
-#include "../terminal/terminal.h"
-#include "../terminal/terminal_B8000_8025.h"
+#include "..\terminal\terminal.h"
+#include "..\terminal\terminal_B8000_8025.h"
 
 #include <stdint.h>
 

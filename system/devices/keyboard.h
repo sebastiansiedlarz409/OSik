@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-
 void KB_Interrupt(void);
 
 #endif //KEYBOARD_H

@@ -1,8 +1,8 @@
 #ifndef CLI_H
 #define CLI_H
 
-#include "terminal.h"
-#include "terminal_B8000_8025.h"
+#include "..\terminal\terminal.h"
+#include "..\terminal\terminal_B8000_8025.h"
 
 #define CMDS_COUNT 10
 

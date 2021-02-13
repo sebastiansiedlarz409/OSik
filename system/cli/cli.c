@@ -2,11 +2,11 @@
 #include "..\libs\string.h"
 #include "..\libs\heap.h"
 #include "cli.h"
-#include "terminal.h"
-#include "terminal_B8000_8025.h"
+#include "..\terminal\terminal.h"
+#include "..\terminal\terminal_B8000_8025.h"
 
 char* cmds[CMDS_COUNT] = {
-    "info"
+    "info",
 };
 
 func cmds_handlers[CMDS_COUNT] = {
@@ -14,7 +14,7 @@ func cmds_handlers[CMDS_COUNT] = {
 };
 
 void CLI_Execute(TerminalContext* context){
-    uint8_t* line;
+    uint8_t* line = NULL;
     uint8_t cmd = CLI_Parse(context, line);
     uint8_t result = cmds_handlers[cmd]((char*)line);
     if(result != 1){
