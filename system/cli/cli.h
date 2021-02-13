@@ -9,7 +9,8 @@
 typedef uint8_t (*func)(const char*);
 
 void CLI_Execute(TerminalContext* context);
-uint8_t CLI_Parse(TerminalContext* context, uint8_t* line);
+uint8_t CLI_Parse(TerminalContext* context, uint8_t** line);
 uint8_t CLI_Info(const char* str);
+uint8_t CLI_NotFound(const char* str);
 
 #endif //PARSER_H

@@ -4,5 +4,6 @@
 #include <stdint.h>
 
 uint8_t STR_CMP(const char* str0, const char* str1);
+uint8_t STR_StartWith(const char* str0, const char* str1);
 
 #endif //STRING_H
