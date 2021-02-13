@@ -45,7 +45,6 @@ uint8_t STR_StartWith(const char* str0, const char* str1){
             result = 0;
             break;
         }
-        //print(Terminal_B8000_8025_GetTerminalContext(), "%c %c %u\n\r", *str0b, *str1b, result);
         str0b++;
         str1b++;
     }

@@ -8,7 +8,7 @@
 
 char* cmds[CMDS_COUNT] = {
     "info",
-    "calc"
+    "calc x"
 };
 
 func cmds_handlers[CMDS_COUNT+1] = {
@@ -20,7 +20,6 @@ func cmds_handlers[CMDS_COUNT+1] = {
 void CLI_Execute(TerminalContext* context){
     uint8_t** buffer = (uint8_t**)HEAP_Malloc(sizeof(uint8_t*));
     uint8_t cmd = CLI_Parse(context, buffer);
-    //print(context, "%x", (uint64_t)*buffer);
     uint8_t result = cmds_handlers[cmd]((char*)*buffer);
     if(result != 1){
         print(context, "\n\rSomething went wrong!");
@@ -54,11 +53,11 @@ uint8_t CLI_Parse(TerminalContext* context, uint8_t** line){
         }
     }
 
-    /*for(uint16_t i = 0;i<CMDS_COUNT;i++){
+    for(uint16_t i = 0;i<CMDS_COUNT;i++){
         if(STR_StartWith((char*)*line, cmds[i])){
             return i+1;
         }
-    }*/
+    }
     
     return 0;
 }
