@@ -30,12 +30,12 @@ static void B8000_8025_Scp(TerminalContext* context, uint16_t x, uint16_t y)
 {
     UNUSED(context);
     //http://wiki.osdev.org/Text_Mode_Cursor#Moving_the_Cursor_with_the_BIOS
-    uint32_t position = y * (LINE_WIDTH/2) + x;
+    uint16_t position = y * (LINE_WIDTH/2) + x;
 
     HAL_PortOutByte(0x3D4, 0x0F);                                       //tell that we want change reg 0x0F in 0x3D5 port
-    HAL_PortOutByte(0x3D5, (unsigned char)(position & 0xFF));           //lower 8 bits
+    HAL_PortOutByte(0x3D5, (uint8_t)(position & 0xFF));                 //lower 8 bits
     HAL_PortOutByte(0x3D4, 0x0E);
-    HAL_PortOutByte(0x3D5, (unsigned char)(position >> 8));
+    HAL_PortOutByte(0x3D5, (uint8_t)((position >> 8) & 0xFF));
 
     B8000_8025_context.x = x;
     B8000_8025_context.y = y;

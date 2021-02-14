@@ -41,6 +41,9 @@ void INT_SetIDTR(void)
     INT_SetIDTEntry(&table[7], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
     INT_SetIDTEntry(&table[8], (uint64_t)PITInt_Wrapper, 0, 0xE, 0, 1); //pit
     INT_SetIDTEntry(&table[9], (uint64_t)KeyboardInt_Wrapper, 0, 0xE, 0, 1); //keyboard
+    for(int i = 10; i<256;i++){
+        INT_SetIDTEntry(&table[i], (uint64_t)DefaultError_Wrapper, 0, 0xE, 0, 1);
+    }
 
     //INTEL 3A, page 200
     IDTP idtp = {

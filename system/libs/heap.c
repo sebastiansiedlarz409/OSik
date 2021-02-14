@@ -23,7 +23,9 @@ void HEAP_Init(uint64_t address, uint64_t size)
 
 void* HEAP_Malloc(uint64_t n)
 {
-    n += n % 8;
+    uint64_t remainder = n % 8;
+	n -= remainder;
+	if (remainder != 0) n += 8;
 
     MemorySegment* CURRENT = CUR_FREE_SEG;
 

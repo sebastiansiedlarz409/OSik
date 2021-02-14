@@ -8,7 +8,7 @@
 
 char* cmds[CMDS_COUNT] = {
     "info",
-    "calc x"
+    "calc"
 };
 
 func cmds_handlers[CMDS_COUNT+1] = {
@@ -22,7 +22,7 @@ void CLI_Execute(TerminalContext* context){
     uint8_t cmd = CLI_Parse(context, buffer);
     uint8_t result = cmds_handlers[cmd]((char*)*buffer);
     if(result != 1){
-        print(context, "\n\rSomething went wrong!");
+        print(context, "Something went wrong!");
     }
 
     HEAP_Free(*buffer);
@@ -33,7 +33,11 @@ uint8_t CLI_Parse(TerminalContext* context, uint8_t** line){
     //get current position
     uint16_t x = 0;
     uint16_t y = 0;
+
     T_GetCursorPosition(context, &x,&y);
+
+    //uint16_t xb = x;
+    //uint16_t yb = y;
 
     uint16_t size = x;
 
@@ -44,9 +48,14 @@ uint8_t CLI_Parse(TerminalContext* context, uint8_t** line){
         x--;
         T_SetCursorPosition(context, x, y);
     }
-    *line[size-1] = '\0';
+    (*line)[size-1] = '\0';
+
+    //restore cursor
+    //T_SetCursorPosition(context, xb, yb);
 
     T_NewLine(context);
+    print(context, "Allocated: %u %u\n\r", size, x);
+
     for(uint16_t i = 0;i<CMDS_COUNT;i++){
         if(STR_CMP((const char*)*line, cmds[i])){
             return i+1;

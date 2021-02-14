@@ -103,9 +103,14 @@ void KB_Print(uint8_t scanCode)
                 T_NewLine(context);
             }
             else{
-                T_TMode(context);
-                CLI_Execute(context);
-                T_TMode(context);
+                uint16_t x = 0;
+                uint16_t y = 0;
+                T_GetCursorPosition(context, &x, &y);
+                if(x > 1){ //if no char entered
+                    T_TMode(context);
+                    CLI_Execute(context);
+                    T_TMode(context);
+                }
                 T_NewLine(context);
             }
         }
