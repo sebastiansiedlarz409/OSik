@@ -1,20 +1,17 @@
 #include "..\common.h"
 #include "..\libs\string.h"
 #include "..\libs\heap.h"
-#include "calc.h"
 #include "cli.h"
 #include "..\terminal\terminal.h"
 #include "..\terminal\terminal_B8000_8025.h"
 
 char* cmds[CMDS_COUNT] = {
-    "info",
-    "calc"
+    "info"
 };
 
 func cmds_handlers[CMDS_COUNT+1] = {
     CLI_NotFound,
     CLI_Info,
-    CALC_Execute,
 };
 
 void CLI_Execute(TerminalContext* context){
@@ -36,9 +33,6 @@ uint8_t CLI_Parse(TerminalContext* context, uint8_t** line){
 
     T_GetCursorPosition(context, &x,&y);
 
-    //uint16_t xb = x;
-    //uint16_t yb = y;
-
     uint16_t size = x;
 
     *line = (uint8_t*)HEAP_Malloc(size);
@@ -50,12 +44,7 @@ uint8_t CLI_Parse(TerminalContext* context, uint8_t** line){
     }
     (*line)[size-1] = '\0';
 
-    //restore cursor
-    //T_SetCursorPosition(context, xb, yb);
-
     T_NewLine(context);
-    print(context, "Allocated: %u %u\n\r", size, x);
-
     for(uint16_t i = 0;i<CMDS_COUNT;i++){
         if(STR_CMP((const char*)*line, cmds[i])){
             return i+1;
