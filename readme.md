@@ -10,6 +10,7 @@ What works (or works in some part):
 * Interrupts
 * Programmable Interval Timer
 * Heap
+* BSOD :D
 
 ## Requirements
 * GCC 64bits
