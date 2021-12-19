@@ -4,6 +4,8 @@
 
 #include <stdint.h>
 
+MemorySegment* CUR_FREE_SEG;
+
 //init node
 void HEAP_Init(uint64_t address, uint64_t size)
 {

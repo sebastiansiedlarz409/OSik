@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 
-TerminalContext* context;
+extern TerminalContext* context;
 
 typedef struct _KB_Context{
     uint8_t counter;

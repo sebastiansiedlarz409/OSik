@@ -154,7 +154,7 @@ loader:
     
     ;next iteration
     add rsi, 0x28                                           ;next section is 40 bytes further
-    loop .ph_loop
+    loop .ph_loop                                           ;this ins sub ecx, 1
 
     ;place stack in memory
     lea rsp, [0x3ff000]
@@ -165,6 +165,7 @@ loader:
     mov rdx, rsp                                            ;second argument
 
     lea rax, [ebx + r11d]                                   ;jump to entry point, _start in kernel
+
     call rax
 
     jmp $

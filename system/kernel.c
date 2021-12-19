@@ -10,13 +10,14 @@
 
 #include <stdint.h>
 
-TerminalContext* context;
+TerminalContext* context = NULL;
+uint8_t a = 0xAB;
 
 void KERN_Welcome(void* kernelEntryPointAddress, void* stackAddress)
 {
     uint64_t KEPAddr = (uint64_t)kernelEntryPointAddress;
     uint64_t SAddr = (uint64_t)stackAddress;
-
+    
     LOGO_ShowLogo();
 
     //void* p1 = HEAP_Malloc(20);
@@ -51,7 +52,7 @@ void KERN_Start(void* kernelEntryPointAddress, void* stackAddress)
 
     //PIT sleep
     PIT_Sleep(2000);
-
+    
     context = Terminal_B8000_8025_GetTerminalContext();
 
     T_ClearTerminal(context);

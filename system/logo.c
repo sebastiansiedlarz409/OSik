@@ -2,7 +2,7 @@
 #include "terminal/terminal.h"
 #include "terminal/terminal_B8000_8025.h"
 
-TerminalContext* context;
+extern TerminalContext* context;
 
 void LOGO_ShowLogo(void)
 {

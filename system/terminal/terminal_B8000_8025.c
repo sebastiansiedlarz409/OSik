@@ -163,7 +163,7 @@ static void B8000_8025_TMode(TerminalContext* context)
     B8000_8025_context.mode = B8000_8025_context.mode == COMMAND ? DATA : COMMAND;
 }
 
-static const TerminalContext context = {
+static TerminalContext context = {
     ._scp = B8000_8025_Scp,
     ._gcp = B8000_8025_Gcp,
     ._clear = B8000_8025_Cls,
