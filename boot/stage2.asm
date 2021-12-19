@@ -116,8 +116,8 @@ loader:
     mov ebx, [esi + 0x28]
 
     ;ImageBase
-    ;mov r11, [esi + 0x30]
-    mov r11, 0x400000
+    mov r11, [esi + 0x30]
+    ;mov r11, 0x400000
 
     ;offset of first section in table
     add esi, 0x108
