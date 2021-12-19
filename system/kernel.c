@@ -11,7 +11,6 @@
 #include <stdint.h>
 
 TerminalContext* context = NULL;
-uint8_t a = 0xAB;
 
 void KERN_Welcome(void* kernelEntryPointAddress, void* stackAddress)
 {
@@ -20,16 +19,16 @@ void KERN_Welcome(void* kernelEntryPointAddress, void* stackAddress)
     
     LOGO_ShowLogo();
 
-    //void* p1 = HEAP_Malloc(20);
-    //void* p2 = HEAP_Malloc(20);
-    //HEAP_Free(p2);
-    //void* p3 = HEAP_Malloc(20);
-    //void* p4 = HEAP_Malloc(5);
+    void* p1 = HEAP_Malloc(20);
+    void* p2 = HEAP_Malloc(20);
+    HEAP_Free(p2);
+    void* p3 = HEAP_Malloc(20);
+    void* p4 = HEAP_Malloc(5);
 
-    //print(context, "%x\r\n", (long long)p1);
-    //print(context, "%x\r\n", (long long)p2);
-    //print(context, "%x\r\n", (long long)p3);
-    //print(context, "%x\r\n", (long long)p4);
+    print(context, "%x\r\n", (long long)p1);
+    print(context, "%x\r\n", (long long)p2);
+    print(context, "%x\r\n", (long long)p3);
+    print(context, "%x\r\n", (long long)p4);
 
     print(context, "Kernel loaded at 0x%x\n\r", KEPAddr);
     print(context, "Stack pointer at 0x%x\n\r", SAddr);
