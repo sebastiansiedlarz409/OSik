@@ -29,3 +29,4 @@ $ python build.py
 ## How it looks like?
 
 <img src="https://github.com/sebastiansiedlarz409/Osik/blob/master/s1.png"/>
+<img src="https://github.com/sebastiansiedlarz409/Osik/blob/master/s2.png"/>
