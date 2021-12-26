@@ -19,7 +19,7 @@ void KERN_Welcome(void* kernelEntryPointAddress, void* stackAddress)
     
     LOGO_ShowLogo();
 
-    void* p1 = HEAP_Malloc(20);
+    void* p1 = HEAP_Malloc(1);
     void* p2 = HEAP_Malloc(20);
     HEAP_Free(p2);
     void* p3 = HEAP_Malloc(20);

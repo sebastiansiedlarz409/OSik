@@ -51,7 +51,7 @@ void INT_SetIDTR(void)
         (uint64_t)&table
     };
 
-    PIC_Init(0x8, 0x70); //default values
+    //PIC_Init(0x8, 0x70); //default values
 
     __asm("lidt %0" : : "m"(idtp));
     __asm("sti");
